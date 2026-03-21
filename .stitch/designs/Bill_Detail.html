@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spürhund - Invoice Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#1a1c1c",
+              "surface-container-low": "#f3f3f3",
+              "on-primary-container": "#ebd5ff",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#dab9ff",
+              "on-tertiary-fixed": "#1c1b1b",
+              "inverse-surface": "#2f3131",
+              "background": "#f9f9f9",
+              "secondary-fixed-dim": "#c0c7d6",
+              "primary": "#6900bf",
+              "on-background": "#1a1c1c",
+              "outline-variant": "#cfc2d7",
+              "tertiary-fixed": "#e5e2e1",
+              "inverse-on-surface": "#f0f1f1",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e8e8e8",
+              "secondary": "#585f6c",
+              "on-secondary-container": "#5e6572",
+              "surface-dim": "#dadada",
+              "on-tertiary-fixed-variant": "#474646",
+              "on-surface-variant": "#4c4355",
+              "tertiary-container": "#626161",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#efdbff",
+              "secondary-fixed": "#dce2f3",
+              "secondary-container": "#dce2f3",
+              "tertiary": "#4a4949",
+              "primary-container": "#8529e2",
+              "surface-container": "#eeeeee",
+              "outline": "#7d7386",
+              "on-secondary-fixed": "#151c27",
+              "on-secondary-fixed-variant": "#404754",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#c8c6c5",
+              "on-primary": "#ffffff",
+              "on-tertiary-container": "#dfdcdc",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#6500b8",
+              "surface-tint": "#8224df",
+              "surface": "#f9f9f9",
+              "surface-container-highest": "#e2e2e2",
+              "surface-bright": "#f9f9f9",
+              "on-primary-fixed": "#2a0053",
+              "inverse-primary": "#dab9ff"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-island {
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+        .editorial-shadow {
+            shadow: 0 24px 48px rgba(17, 17, 17, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-white/70 backdrop-blur-3xl">
+<div class="flex items-center justify-center w-10 h-10 hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[#8529E2]" data-icon="arrow_back">arrow_back</span>
+</div>
+<h1 class="font-headline tracking-[-0.03em] font-bold text-lg text-[#111111]">Invoice Details</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto space-y-8">
+<!-- Hero Card: Double-Bezel Architecture -->
+<section class="bg-surface-container-lowest rounded-xl p-3 shadow-sm">
+<div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-[#6900BF] to-[#8529E2] p-8 min-h-[220px] flex flex-col justify-between">
+<!-- Decorative Glass Element -->
+<div class="absolute top-[-20%] right-[-10%] w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<span class="text-white/70 font-label tracking-wider text-xs uppercase">October 2024</span>
+<h2 class="text-white font-headline text-4xl font-bold tracking-[-0.04em] mt-2">R 2,450.00</h2>
+</div>
+<div class="relative z-10 flex justify-between items-end">
+<div class="bg-emerald-400/20 backdrop-blur-md border border-emerald-400/20 px-4 py-1.5 rounded-full">
+<span class="text-emerald-100 font-label text-xs font-bold tracking-widest">PAID</span>
+</div>
+<div class="text-white/40">
+<span class="material-symbols-outlined text-4xl opacity-20" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Charge Breakdown: Pure White Surface Container -->
+<section class="bg-surface-container-lowest rounded-xl p-8 space-y-10 shadow-sm">
+<div class="flex flex-col space-y-1">
+<h3 class="font-headline text-xl tracking-tight">Monthly Breakdown</h3>
+<p class="text-secondary text-sm font-body">Detailed list of utilities and rates</p>
+</div>
+<div class="space-y-8">
+<!-- Electricity -->
+<div class="flex justify-between items-center group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Electricity</p>
+<p class="text-xs text-secondary">Usage: 420kWh</p>
+</div>
+</div>
+<p class="font-headline text-lg font-bold tracking-tight">R 1,200.00</p>
+</div>
+<!-- Water -->
+<div class="flex justify-between items-center group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Water</p>
+<p class="text-xs text-secondary">Usage: 12kL</p>
+</div>
+</div>
+<p class="font-headline text-lg font-bold tracking-tight">R 800.00</p>
+</div>
+<!-- Refuse -->
+<div class="flex justify-between items-center group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Refuse</p>
+<p class="text-xs text-secondary">Municipal Service</p>
+</div>
+</div>
+<p class="font-headline text-lg font-bold tracking-tight">R 250.00</p>
+</div>
+<!-- Rates -->
+<div class="flex justify-between items-center group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="home_work">home_work</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Rates</p>
+<p class="text-xs text-secondary">Property Tax</p>
+</div>
+</div>
+<p class="font-headline text-lg font-bold tracking-tight">R 200.00</p>
+</div>
+</div>
+<!-- Total Logic -->
+<div class="pt-6 mt-4 border-t border-surface-container-low flex justify-between items-center">
+<span class="font-label text-secondary font-medium">Total Amount</span>
+<span class="font-headline text-2xl font-bold tracking-tighter text-primary">R 2,450.00</span>
+</div>
+</section>
+<!-- Bottom Actions -->
+<section class="flex gap-4 pb-12">
+<button class="flex-1 bg-white border border-surface-container-highest py-4 rounded-full flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="download">download</span>
+<span class="font-label font-bold text-secondary">Download PDF</span>
+</button>
+<button class="flex-1 bg-primary/20 cursor-not-allowed py-4 rounded-full flex items-center justify-center gap-2 opacity-60">
+<span class="material-symbols-outlined text-white text-xl" data-icon="check_circle">check_circle</span>
+<span class="font-label font-bold text-white">Already Paid</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar: Floating Glass Island -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-2">
+<div class="glass-island bg-white/80 dark:bg-slate-900/80 rounded-full mx-auto mb-8 w-[90%] max-w-md flex justify-around items-center px-6 py-3 shadow-[0_24px_48px_rgba(17,17,17,0.08)]">
+<a class="text-slate-400 p-3 hover:bg-slate-100 rounded-full transition-all duration-300 scale-110 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</a>
+<a class="bg-[#8529E2] text-white rounded-full p-3 shadow-lg scale-110 active:scale-95 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+</a>
+<a class="text-slate-400 p-3 hover:bg-slate-100 rounded-full transition-all duration-300 scale-110 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+</a>
+<a class="text-slate-400 p-3 hover:bg-slate-100 rounded-full transition-all duration-300 scale-110 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</a>
+</div>
+</nav>
+<!-- Visual Background Enhancements -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+<div class="absolute top-[10%] right-[-5%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[20%] left-[-10%] w-[300px] h-[300px] bg-[#8529E2]/5 rounded-full blur-[80px]"></div>
+</div>
+</body></html>

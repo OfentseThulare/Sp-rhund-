@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#eeeeee",
+              "on-secondary-fixed": "#151c27",
+              "on-primary-fixed": "#2a0053",
+              "on-error": "#ffffff",
+              "primary-fixed": "#efdbff",
+              "background": "#f9f9f9",
+              "secondary-fixed-dim": "#c0c7d6",
+              "on-tertiary-fixed": "#1c1b1b",
+              "on-surface": "#1a1c1c",
+              "on-secondary-fixed-variant": "#404754",
+              "surface": "#f9f9f9",
+              "primary-container": "#8529e2",
+              "secondary": "#585f6c",
+              "on-secondary-container": "#5e6572",
+              "surface-container-highest": "#e2e2e2",
+              "surface-bright": "#f9f9f9",
+              "primary": "#6900bf",
+              "on-primary-container": "#ebd5ff",
+              "tertiary-fixed": "#e5e2e1",
+              "on-surface-variant": "#4c4355",
+              "secondary-fixed": "#dce2f3",
+              "secondary-container": "#dce2f3",
+              "surface-variant": "#e2e2e2",
+              "surface-dim": "#dadada",
+              "on-tertiary-container": "#dfdcdc",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#c8c6c5",
+              "surface-tint": "#8224df",
+              "surface-container-high": "#e8e8e8",
+              "on-background": "#1a1c1c",
+              "outline": "#7d7386",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#6500b8",
+              "surface-container-low": "#f3f3f3",
+              "inverse-surface": "#2f3131",
+              "outline-variant": "#cfc2d7",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#626161",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "tertiary": "#4a4949",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#474646",
+              "error": "#ba1a1a",
+              "primary-fixed-dim": "#dab9ff",
+              "inverse-on-surface": "#f0f1f1",
+              "inverse-primary": "#dab9ff"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #F9F9F9;
+            font-family: 'Manrope', sans-serif;
+            color: #111111;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl rounded-full mt-4 mx-4 shadow-[0_24px_48px_rgba(17,17,17,0.06)]">
+<button class="active:scale-95 duration-200 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">menu</span>
+</button>
+<h1 class="font-['Epilogue'] tracking-tight font-bold text-slate-900 dark:text-slate-50 text-lg">Bill History</h1>
+<button class="active:scale-95 duration-200 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">filter_list</span>
+</button>
+</header>
+<main class="pt-28 px-6 space-y-8">
+<!-- Year Selection (Horizontal Chips) -->
+<section class="flex overflow-x-auto gap-3 pb-2 no-scrollbar">
+<button class="flex-none px-8 py-3 bg-primary-container text-on-primary rounded-full font-label font-bold text-sm shadow-lg shadow-primary-container/20 active:scale-95 duration-200">
+                2024
+            </button>
+<button class="flex-none px-8 py-3 bg-surface-container-lowest text-on-surface-variant rounded-full font-label font-bold text-sm outline outline-1 outline-outline-variant/15 hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+                2023
+            </button>
+<button class="flex-none px-8 py-3 bg-surface-container-lowest text-on-surface-variant rounded-full font-label font-bold text-sm outline outline-1 outline-outline-variant/15 hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+                2022
+            </button>
+</section>
+<!-- Bill History List -->
+<section class="space-y-6">
+<!-- October 2024 Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_24px_48px_rgba(17,17,17,0.04)]">
+<div class="bg-surface-container-low rounded-lg p-6 space-y-6">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-xl tracking-tight text-on-surface">October 2024</h3>
+<p class="text-secondary text-sm font-medium">01 Oct - 31 Oct</p>
+</div>
+<div class="text-right space-y-2">
+<p class="text-primary-container font-headline font-bold text-lg">R 2,450.00</p>
+<span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                Paid
+                            </span>
+</div>
+</div>
+<div class="pt-4 border-t border-white/50">
+<button class="flex items-center gap-2 text-primary text-sm font-bold font-label hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-sm">description</span>
+                            Download PDF
+                        </button>
+</div>
+</div>
+</div>
+<!-- September 2024 Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_24px_48px_rgba(17,17,17,0.04)]">
+<div class="bg-surface-container-low rounded-lg p-6 space-y-6">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-xl tracking-tight text-on-surface">September 2024</h3>
+<p class="text-secondary text-sm font-medium">01 Sep - 30 Sep</p>
+</div>
+<div class="text-right space-y-2">
+<p class="text-primary-container font-headline font-bold text-lg">R 2,120.50</p>
+<span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                Paid
+                            </span>
+</div>
+</div>
+<div class="pt-4 border-t border-white/50">
+<button class="flex items-center gap-2 text-primary text-sm font-bold font-label hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-sm">description</span>
+                            Download PDF
+                        </button>
+</div>
+</div>
+</div>
+<!-- August 2024 Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_24px_48px_rgba(17,17,17,0.04)]">
+<div class="bg-surface-container-low rounded-lg p-6 space-y-6">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-xl tracking-tight text-on-surface">August 2024</h3>
+<p class="text-secondary text-sm font-medium">01 Aug - 31 Aug</p>
+</div>
+<div class="text-right space-y-2">
+<p class="text-primary-container font-headline font-bold text-lg">R 2,890.00</p>
+<span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                Paid
+                            </span>
+</div>
+</div>
+<div class="pt-4 border-t border-white/50">
+<button class="flex items-center gap-2 text-primary text-sm font-bold font-label hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-sm">description</span>
+                            Download PDF
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights Bento Moment -->
+<section class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-[0_24px_48px_rgba(17,17,17,0.04)]">
+<h4 class="font-headline font-bold text-on-surface mb-4">Total Spending YTD</h4>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-extrabold tracking-tighter text-on-surface">R 18,450.50</span>
+<span class="text-emerald-600 font-bold text-sm bg-emerald-50 px-2 py-1 rounded-full">+12% vs 2023</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl rounded-full mb-6 mx-8 shadow-[0_24px_48px_rgba(17,17,17,0.06)]">
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 w-12 h-12 hover:text-[#8529E2] dark:hover:text-[#A855F7] transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Manrope'] text-[10px] tracking-wider uppercase font-bold mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-[#8529E2] text-white rounded-full w-12 h-12 shadow-lg shadow-[#8529E2]/20 active:scale-90 duration-200">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="hidden">History</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 w-12 h-12 hover:text-[#8529E2] dark:hover:text-[#A855F7] transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-['Manrope'] text-[10px] tracking-wider uppercase font-bold mt-1">Payments</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 w-12 h-12 hover:text-[#8529E2] dark:hover:text-[#A855F7] transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] tracking-wider uppercase font-bold mt-1">Profile</span>
+</button>
+</nav>
+</body></html>

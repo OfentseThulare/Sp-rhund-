@@ -1,0 +1,47 @@
+import '../../models/service_alert.dart';
+
+final List<ServiceAlert> mockAlerts = [
+  ServiceAlert(
+    id: "alert_1",
+    alertType: "maintenance",
+    title: "Scheduled water maintenance",
+    area: "Arcadia, Sunnyside",
+    description: "Scheduled maintenance by Tshwane water.",
+    severity: "warning",
+    startTime: DateTime(2026, 3, 3, 8, 0),
+    endTime: DateTime(2026, 3, 3, 16, 0),
+    createdAt: DateTime(2026, 3, 1),
+  ),
+  ServiceAlert(
+    id: "alert_2",
+    alertType: "resolved",
+    title: "Sewer blockage cleared",
+    area: "Hatfield",
+    description: "The blockage reported has been resolved.",
+    severity: "info",
+    startTime: DateTime.now().subtract(const Duration(hours: 4)),
+    endTime: DateTime.now().subtract(const Duration(hours: 2)),
+    createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+  ),
+  ServiceAlert(
+    id: "alert_3",
+    alertType: "loadshedding",
+    title: "Stage 2 Load Shedding",
+    area: "National",
+    description: "Eskom has implemented stage 2 loadshedding.",
+    severity: "critical",
+    startTime: DateTime.now(),
+    endTime: DateTime.now().add(const Duration(hours: 2)),
+    createdAt: DateTime.now(),
+  ),
+  ServiceAlert(
+    id: "alert_4",
+    alertType: "info",
+    title: "Meter reading schedule updated",
+    area: "Sunnyside Ward 80",
+    description: "Please note the updated schedule for meter readings this month.",
+    severity: "info",
+    startTime: DateTime.now(),
+    createdAt: DateTime.now(),
+  ),
+];

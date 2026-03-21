@@ -1,0 +1,23 @@
+{
+  "name": "projects/3161321691366009612",
+  "title": "Spürhund",
+  "visibility": "PRIVATE",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "screens": {
+    "Home_Dashboard": "d13f7366cd2f48e4bd65d55b982653b1",
+    "Splash": "f4f5e44189634def9f80dbd5f23cc94d",
+    "Onboarding_1": "7296e23dd311403db34f1969a7b43a41",
+    "Onboarding_3": "cadb84e5fa0c4807ae0979d13478636f",
+    "Sign_Up_Province": "b13671842b2a4d1d833908fa1d293cc0",
+    "Sign_Up_Details": "c1727585be3d4ddcaa4e8addd344706f",
+    "Link_Municipal_Accounts": "7b6594d0ee584c5da1a5f31ddd327604",
+    "Login": "5071ba8277024a84b5a2195c521fbf2e",
+    "Bill_History": "47fe17ce07b141c39bd8376337ee4937",
+    "Bill_Detail": "d43963f79f38430aac5318de4e4f5da7",
+    "Service_Status": "08ecdae9f69241f8a12f41a22994c173",
+    "Disputes_List": "b0b1e03067444b658311a571e09f80e9",
+    "Contacts_Directory": "b254c31103cb499e9461b0eea80402fe",
+    "Profile_And_Settings": "a1d9133a9bfa49f7bd16e0d6c814873a"
+  }
+}

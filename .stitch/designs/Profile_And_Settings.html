@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#dce2f3",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f9f9f9",
+              "primary": "#6900bf",
+              "inverse-surface": "#2f3131",
+              "surface": "#f9f9f9",
+              "on-secondary-container": "#5e6572",
+              "on-tertiary-container": "#dfdcdc",
+              "tertiary-container": "#626161",
+              "secondary-fixed-dim": "#c0c7d6",
+              "on-tertiary-fixed-variant": "#474646",
+              "surface-container-highest": "#e2e2e2",
+              "primary-fixed-dim": "#dab9ff",
+              "outline": "#7d7386",
+              "on-primary-container": "#ebd5ff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#6500b8",
+              "secondary-container": "#dce2f3",
+              "on-surface-variant": "#4c4355",
+              "on-primary-fixed": "#2a0053",
+              "surface-container": "#eeeeee",
+              "on-secondary-fixed-variant": "#404754",
+              "tertiary-fixed-dim": "#c8c6c5",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#dab9ff",
+              "on-secondary": "#ffffff",
+              "on-surface": "#1a1c1c",
+              "on-tertiary": "#ffffff",
+              "primary-fixed": "#efdbff",
+              "surface-container-low": "#f3f3f3",
+              "on-error": "#ffffff",
+              "surface-tint": "#8224df",
+              "surface-container-high": "#e8e8e8",
+              "primary-container": "#8529e2",
+              "outline-variant": "#cfc2d7",
+              "on-primary": "#ffffff",
+              "background": "#f9f9f9",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#1c1b1b",
+              "tertiary-fixed": "#e5e2e1",
+              "on-background": "#1a1c1c",
+              "surface-variant": "#e2e2e2",
+              "tertiary": "#4a4949",
+              "on-secondary-fixed": "#151c27",
+              "secondary": "#585f6c",
+              "surface-dim": "#dadada",
+              "inverse-on-surface": "#f0f1f1"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+      }
+      .editorial-shadow {
+        box-shadow: 0 24px 48px rgba(17, 17, 17, 0.06);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#FAFAFA]/80 dark:bg-gray-900/80 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full shadow-none">
+<div class="flex items-center gap-4">
+<button class="text-[#8529E2] dark:text-[#A855F7] hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-['Epilogue'] tracking-tighter font-bold text-xl text-[#111111] dark:text-white">Profile</h1>
+</div>
+<button class="text-[#6B7280] dark:text-gray-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<main class="pt-24 px-6 space-y-12">
+<!-- Hero Area: User Profile Summary -->
+<section class="relative">
+<!-- Background Blur Effect -->
+<div class="absolute -top-12 -left-12 w-64 h-64 bg-primary-container/20 rounded-full blur-[80px]"></div>
+<!-- Double Bezel Nested Card -->
+<div class="relative bg-surface-container-lowest rounded-xl p-6 editorial-shadow">
+<div class="glass-card rounded-lg p-8 flex flex-col items-center text-center space-y-4">
+<!-- Avatar -->
+<div class="w-24 h-24 rounded-full bg-primary-fixed flex items-center justify-center border-4 border-surface-container-lowest editorial-shadow">
+<span class="font-headline font-black text-2xl text-on-primary-fixed tracking-tight">JD</span>
+</div>
+<div class="space-y-1">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">John Doe</h2>
+<p class="text-secondary font-medium">john.doe@email.com</p>
+</div>
+<button class="mt-2 text-primary-container font-bold text-sm tracking-wide hover:opacity-80 transition-opacity">
+                        Edit Profile
+                    </button>
+</div>
+</div>
+</section>
+<!-- Settings List -->
+<section class="space-y-4">
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden editorial-shadow">
+<!-- Row: My Municipal Accounts -->
+<button class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">account_balance</span>
+</div>
+<span class="font-medium text-on-surface">My Municipal Accounts</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Divider -->
+<div class="h-[1px] mx-6 bg-surface-container-low"></div>
+<!-- Row: Notification Preferences -->
+<button class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">notifications</span>
+</div>
+<span class="font-medium text-on-surface">Notification Preferences</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Divider -->
+<div class="h-[1px] mx-6 bg-surface-container-low"></div>
+<!-- Row: Language -->
+<button class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">translate</span>
+</div>
+<span class="font-medium text-on-surface">Language: English</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Divider -->
+<div class="h-[1px] mx-6 bg-surface-container-low"></div>
+<!-- Row: Privacy Policy -->
+<button class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<span class="font-medium text-on-surface">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Sign Out Action -->
+<section class="pt-4">
+<button class="w-full py-5 rounded-full bg-[#DC2626] text-white font-headline font-bold tracking-tight editorial-shadow active:scale-95 transition-transform">
+                Sign Out
+            </button>
+<p class="text-center mt-6 text-xs text-secondary font-medium uppercase tracking-[0.2em]">Spürhund v2.4.0</p>
+</section>
+</main>
+<!-- BottomNavBar: Floating Glass Island -->
+<nav class="fixed bottom-8 left-0 right-0 z-50 flex justify-around items-center mx-auto w-[90%] max-w-md bg-white/70 dark:bg-gray-800/70 backdrop-blur-[30px] rounded-full px-2 py-3 shadow-[0_24px_48px_rgba(17,17,17,0.08)]">
+<a class="text-[#6B7280] dark:text-gray-400 p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded-full transition-all active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</a>
+<a class="text-[#6B7280] dark:text-gray-400 p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded-full transition-all active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</a>
+<a class="text-[#6B7280] dark:text-gray-400 p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded-full transition-all active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</a>
+<a class="bg-[#8529E2] text-white rounded-full p-3 shadow-lg shadow-[#8529E2]/20 active:scale-90 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</a>
+</nav>
+</body></html>
