@@ -69,10 +69,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   _buildPage(
                     title: 'Never Miss a\nMunicipal Bill',
                     description:
-                        'Spurhund tracks your Tshwane accounts 24/7. Get instant alerts when bills are issued or due.',
+                        'Spürhund tracks your Tshwane accounts 24/7. Get instant alerts when bills are issued or due.',
                     icon: Icons.notifications_active_rounded,
                     gradient: [
-                      SpuerhundColours.primary.withValues(alpha: 0.08),
+                      SpuerhundColours.primary.withValues(alpha: 0.25),
                       SpuerhundColours.primaryTint,
                     ],
                   ),
@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         'Direct integration with city systems for faster resolution of billing errors and service requests.',
                     icon: Icons.speed_rounded,
                     gradient: [
-                      SpuerhundColours.success.withValues(alpha: 0.06),
+                      SpuerhundColours.success.withValues(alpha: 0.20),
                       SpuerhundColours.successTint,
                     ],
                   ),
@@ -184,7 +184,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 decoration: BoxDecoration(
                   color: _currentPage == index
                       ? SpuerhundColours.primary
-                      : SpuerhundColours.divider,
+                      : SpuerhundColours.border,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),

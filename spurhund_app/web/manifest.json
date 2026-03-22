@@ -3,7 +3,7 @@
     "short_name": "Spürhund",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FFFFFF",
+    "background_color": "#0A0A0A",
     "theme_color": "#8529E2",
     "description": "Spürhund Municipal Accounts app.",
     "orientation": "portrait-primary",

@@ -85,7 +85,7 @@ class BillDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(SpuerhundSpacing.lg),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: SpuerhundColours.surface,
                   borderRadius: BorderRadius.circular(SpuerhundRadius.lg),
                   border: Border.all(color: SpuerhundColours.border),
                   boxShadow: SpuerhundShadows.subtle,
@@ -123,7 +123,7 @@ class BillDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(SpuerhundSpacing.lg),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: SpuerhundColours.surface,
                   borderRadius: BorderRadius.circular(SpuerhundRadius.lg),
                   border: Border.all(color: SpuerhundColours.border),
                   boxShadow: SpuerhundShadows.subtle,

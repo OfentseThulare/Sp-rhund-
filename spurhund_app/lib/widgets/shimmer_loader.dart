@@ -47,9 +47,9 @@ class _ShimmerLoaderState extends State<ShimmerLoader>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: const [
-                Color(0xFFEEEEEE),
-                Color(0xFFF8F8F8),
-                Color(0xFFEEEEEE),
+                Color(0xFF1A1A1A),
+                Color(0xFF2A2A2A),
+                Color(0xFF1A1A1A),
               ],
               stops: [
                 _animation.value - 0.3,

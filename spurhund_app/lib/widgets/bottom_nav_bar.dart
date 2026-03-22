@@ -40,11 +40,11 @@ class SpuerhundNavBar extends StatelessWidget {
             child: Container(
               height: 72,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.88),
+                color: SpuerhundColours.surface.withValues(alpha: 0.92),
                 borderRadius: BorderRadius.circular(SpuerhundRadius.pill),
                 boxShadow: SpuerhundShadows.floating,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.6),
+                  color: SpuerhundColours.glassBorder,
                   width: 1,
                 ),
               ),

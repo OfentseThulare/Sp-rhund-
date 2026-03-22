@@ -3,19 +3,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'colours.dart';
 
 class AppTheme {
-  static ThemeData get lightTheme {
-    final ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: SpuerhundColours.primary,
+  static ThemeData get darkTheme {
+    final ColorScheme colorScheme = ColorScheme.dark(
       primary: SpuerhundColours.primary,
       onPrimary: Colors.white,
       secondary: SpuerhundColours.primaryLight,
-      surface: SpuerhundColours.background,
+      surface: SpuerhundColours.surface,
       onSurface: SpuerhundColours.textPrimary,
       error: SpuerhundColours.error,
+      onError: Colors.white,
+      outline: SpuerhundColours.border,
     );
 
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.dark,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: SpuerhundColours.background,
 
@@ -113,14 +115,14 @@ class AppTheme {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(SpuerhundRadius.md),
           borderSide: BorderSide(
-            color: SpuerhundColours.primary.withValues(alpha: 0.5),
+            color: SpuerhundColours.primary.withValues(alpha: 0.6),
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(SpuerhundRadius.md),
           borderSide: BorderSide(
-            color: SpuerhundColours.error.withValues(alpha: 0.5),
+            color: SpuerhundColours.error.withValues(alpha: 0.6),
             width: 1.5,
           ),
         ),
@@ -143,7 +145,7 @@ class AppTheme {
 
       // Bottom Navigation Bar
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Colors.white.withValues(alpha: 0.95),
+        backgroundColor: SpuerhundColours.surface.withValues(alpha: 0.95),
         indicatorColor: SpuerhundColours.primaryTint,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         iconTheme: WidgetStateProperty.resolveWith((states) {

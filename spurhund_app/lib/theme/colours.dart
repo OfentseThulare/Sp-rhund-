@@ -5,41 +5,40 @@ class SpuerhundColours {
   static const Color primary = Color(0xFF8529E2);
   static const Color primaryDark = Color(0xFF6B1FB8);
   static const Color primaryLight = Color(0xFFB07AEF);
-  static const Color primaryTint = Color(0xFFF3ECFD);
+  static const Color primaryTint = Color(0xFF1C0A3A);
 
-  // Surfaces
-  static const Color background = Color(0xFFF9FAFB);
-  static const Color backgroundDark = Color(0xFF0A0A0A);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceMuted = Color(0xFFF4F4F6);
-  static const Color surfaceElevated = Color(0xFFFFFFFF);
+  // Surfaces — Deep black palette
+  static const Color background = Color(0xFF0A0A0A);
+  static const Color backgroundDark = Color(0xFF000000);
+  static const Color surface = Color(0xFF111111);
+  static const Color surfaceMuted = Color(0xFF1A1A1A);
+  static const Color surfaceElevated = Color(0xFF161616);
 
-  // Text Hierarchy
-  static const Color textPrimary = Color(0xFF111111);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color textTertiary = Color(0xFF9CA3AF);
+  // Text Hierarchy — Inverted for dark theme
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFF9CA3AF);
+  static const Color textTertiary = Color(0xFF6B7280);
 
   // Status
   static const Color success = Color(0xFF10B981);
-  static const Color successTint = Color(0xFFECFDF5);
+  static const Color successTint = Color(0xFF0A1F13);
   static const Color warning = Color(0xFFF59E0B);
-  static const Color warningTint = Color(0xFFFFFBEB);
+  static const Color warningTint = Color(0xFF1F1600);
   static const Color error = Color(0xFFEF4444);
-  static const Color errorTint = Color(0xFFFEF2F2);
+  static const Color errorTint = Color(0xFF1F0A0A);
 
   // Structural
-  static const Color divider = Color(0xFFE5E7EB);
-  static const Color border = Color(0xFFF0F0F2);
-  static const Color glassBorder = Color(0x33FFFFFF);
-  static const Color glassInnerBorder = Color(0x26FFFFFF);
+  static const Color divider = Color(0xFF2A2A2A);
+  static const Color border = Color(0xFF1E1E1E);
+  static const Color glassBorder = Color(0x1AFFFFFF);
+  static const Color glassInnerBorder = Color(0x0DFFFFFF);
 }
 
-/// Premium shadow presets following taste-skill diffusion shadow principles.
-/// Tinted to background hue, wide-spread, never harsh.
+/// Premium shadow presets — tinted purple glow for dark backgrounds.
 class SpuerhundShadows {
   static List<BoxShadow> get subtle => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.03),
+      color: Colors.black.withValues(alpha: 0.4),
       blurRadius: 12,
       offset: const Offset(0, 4),
     ),
@@ -47,7 +46,7 @@ class SpuerhundShadows {
 
   static List<BoxShadow> get card => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.04),
+      color: Colors.black.withValues(alpha: 0.5),
       blurRadius: 24,
       offset: const Offset(0, 8),
       spreadRadius: -4,
@@ -56,8 +55,8 @@ class SpuerhundShadows {
 
   static List<BoxShadow> get elevated => [
     BoxShadow(
-      color: SpuerhundColours.primary.withValues(alpha: 0.08),
-      blurRadius: 32,
+      color: SpuerhundColours.primary.withValues(alpha: 0.20),
+      blurRadius: 40,
       offset: const Offset(0, 12),
       spreadRadius: -8,
     ),
@@ -65,8 +64,8 @@ class SpuerhundShadows {
 
   static List<BoxShadow> get floating => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.06),
-      blurRadius: 40,
+      color: SpuerhundColours.primary.withValues(alpha: 0.15),
+      blurRadius: 48,
       offset: const Offset(0, 16),
       spreadRadius: -12,
     ),

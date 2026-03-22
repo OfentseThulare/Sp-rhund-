@@ -21,7 +21,7 @@ class SpuerhundApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Spürhund',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       routerConfig: AppRouter.router,
       debugShowCheckedModeBanner: false,
     );

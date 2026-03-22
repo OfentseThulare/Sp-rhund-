@@ -105,7 +105,7 @@ class LinkAccountsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(SpuerhundSpacing.lg),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: SpuerhundColours.surface,
                 border: Border(
                     top: BorderSide(
                         color: SpuerhundColours.divider

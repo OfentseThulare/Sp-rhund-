@@ -165,7 +165,7 @@ class _ContactsDirectoryScreenState extends State<ContactsDirectoryScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: SpuerhundColours.surface,
         borderRadius: BorderRadius.circular(SpuerhundRadius.lg),
         border: Border.all(color: SpuerhundColours.border),
         boxShadow: SpuerhundShadows.subtle,

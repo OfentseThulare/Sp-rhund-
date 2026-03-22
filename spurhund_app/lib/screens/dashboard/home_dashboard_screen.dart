@@ -356,7 +356,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: SpuerhundColours.surface,
         borderRadius: BorderRadius.circular(SpuerhundRadius.lg),
         border: Border.all(color: SpuerhundColours.border),
         boxShadow: SpuerhundShadows.subtle,
@@ -482,7 +482,7 @@ class _QuickActionItemState extends State<_QuickActionItem>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: SpuerhundColours.surface,
                 shape: BoxShape.circle,
                 boxShadow: SpuerhundShadows.subtle,
                 border: Border.all(

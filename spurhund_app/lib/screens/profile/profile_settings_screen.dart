@@ -57,7 +57,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                   color: SpuerhundColours.primaryTint,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: Colors.white, width: 4),
+                                      color: SpuerhundColours.border, width: 3),
                                   boxShadow: SpuerhundShadows.elevated,
                                 ),
                                 child: Center(
@@ -170,7 +170,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   Widget _buildSettingsGroup(List<_SettingItem> items) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: SpuerhundColours.surface,
         borderRadius: BorderRadius.circular(SpuerhundRadius.lg),
         border: Border.all(color: SpuerhundColours.border),
         boxShadow: SpuerhundShadows.subtle,

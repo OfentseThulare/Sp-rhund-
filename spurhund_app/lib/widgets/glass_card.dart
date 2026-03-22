@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../theme/colours.dart';
 
 /// Premium glass-morphism card with optional double-bezel (Doppelrand) technique.
-/// Implements taste-skill haptic micro-aesthetics: outer shell + inner core
-/// with refraction borders and tinted diffusion shadows.
+/// Dark-theme variant: frosted dark glass with purple-tinted refraction borders
+/// and diffusion glow shadows.
 class GlassCard extends StatefulWidget {
   final Widget child;
   final double borderRadius;
@@ -52,7 +52,8 @@ class _GlassCardState extends State<GlassCard>
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = widget.backgroundColor ?? Colors.white.withValues(alpha: 0.75);
+    final bgColor = widget.backgroundColor ??
+        SpuerhundColours.surface.withValues(alpha: 0.80);
 
     Widget card = widget.isDoubleBezel
         ? _buildDoubleBezelCard(bgColor)
@@ -84,10 +85,9 @@ class _GlassCardState extends State<GlassCard>
   }
 
   Widget _buildDoubleBezelCard(Color bgColor) {
-    // Outer shell: subtle background, hairline border, padding
     return Container(
       decoration: BoxDecoration(
-        color: SpuerhundColours.surfaceMuted.withValues(alpha: 0.5),
+        color: SpuerhundColours.surfaceMuted.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(widget.borderRadius + 6),
         border: Border.all(
           color: SpuerhundColours.border,
@@ -106,13 +106,12 @@ class _GlassCardState extends State<GlassCard>
               color: bgColor,
               borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.4),
+                color: SpuerhundColours.glassBorder,
                 width: 1,
               ),
-              // Inner refraction highlight
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: SpuerhundColours.primary.withValues(alpha: 0.06),
                   blurRadius: 1,
                   offset: const Offset(0, 1),
                   blurStyle: BlurStyle.inner,
@@ -132,7 +131,7 @@ class _GlassCardState extends State<GlassCard>
         color: bgColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.5),
+          color: SpuerhundColours.glassBorder,
           width: 1.5,
         ),
         boxShadow: SpuerhundShadows.card,

@@ -5,6 +5,7 @@ import '../theme/colours.dart';
 import '../widgets/spuerhund_button.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/staggered_column.dart';
+import '../widgets/spurhund_logo.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -22,25 +23,10 @@ class LoginScreen extends StatelessWidget {
           child: StaggeredColumn(
             staggerDelay: const Duration(milliseconds: 50),
             children: [
-              // Logo icon
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: SpuerhundColours.primaryTint,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: SpuerhundColours.primary.withValues(alpha: 0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Icon(Icons.search_rounded,
-                      color: SpuerhundColours.primary, size: 32),
-                ),
+              // Brand logo
+              const SpuerhundLogo(
+                size: 72,
+                containerBorderRadius: SpuerhundRadius.lg,
               ),
               const SizedBox(height: SpuerhundSpacing.lg),
 

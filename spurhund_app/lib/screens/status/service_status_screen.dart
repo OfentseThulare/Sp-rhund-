@@ -190,7 +190,7 @@ class _ServiceStatusScreenState extends State<ServiceStatusScreen> {
       'warning' => SpuerhundColours.warningTint,
       'info' => SpuerhundColours.primaryTint,
       'resolved' => SpuerhundColours.successTint,
-      _ => Colors.white,
+      _ => SpuerhundColours.surface,
     };
   }
 
