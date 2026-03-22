@@ -1,0 +1,11 @@
+{
+  "buildCommand": "echo 'Flutter pre-built'",
+  "outputDirectory": "spurhund_app/build/web",
+  "installCommand": "echo 'no install needed'",
+  "rewrites": [
+    {
+      "source": "/((?!main\\.dart\\.js|flutter_bootstrap\\.js|flutter\\.js|flutter_service_worker\\.js|canvaskit/|assets/|icons/|manifest\\.json|favicon\\.png|version\\.json).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
