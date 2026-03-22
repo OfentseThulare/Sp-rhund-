@@ -11,6 +11,7 @@ import '../../widgets/staggered_column.dart';
 import '../../view_models/account_view_model.dart';
 import '../../view_models/user_view_model.dart';
 import '../../models/account.dart';
+import '../../widgets/spurhund_logo.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({super.key});
@@ -148,6 +149,11 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        const SpuerhundLogo(
+          size: 44,
+          containerBorderRadius: SpuerhundRadius.sm,
+        ),
+        const SizedBox(width: SpuerhundSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

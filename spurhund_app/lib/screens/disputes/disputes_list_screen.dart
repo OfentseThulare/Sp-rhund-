@@ -7,6 +7,7 @@ import '../../widgets/status_badge.dart';
 import '../../widgets/shimmer_loader.dart';
 import '../../widgets/staggered_column.dart';
 import '../../view_models/dispute_view_model.dart';
+import '../../widgets/spurhund_logo.dart';
 
 class DisputesListScreen extends StatefulWidget {
   const DisputesListScreen({super.key});
@@ -32,7 +33,17 @@ class _DisputesListScreenState extends State<DisputesListScreen> {
       backgroundColor: SpuerhundColours.background,
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text('My Disputes'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SpuerhundLogo(
+              size: 32,
+              containerBorderRadius: SpuerhundRadius.xs,
+            ),
+            const SizedBox(width: SpuerhundSpacing.sm),
+            const Text('My Disputes'),
+          ],
+        ),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: SpuerhundSpacing.md),
