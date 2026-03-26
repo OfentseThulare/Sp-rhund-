@@ -1,24 +1,28 @@
 import 'package:flutter/foundation.dart';
+import '../data/repositories/interfaces/i_user_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../models/user.dart';
 import '../data/mock/provinces_and_municipalities.dart';
 import '../models/municipality.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  final UserRepository _userRepo;
+  final IUserRepository _userRepo;
 
   AppUser? _user;
   String? _selectedProvince;
   String? _selectedMunicipality;
   bool _isAuthenticated = false;
+  String? _errorMessage;
 
-  AuthViewModel({UserRepository? userRepo})
+  AuthViewModel({IUserRepository? userRepo})
       : _userRepo = userRepo ?? UserRepository();
 
   AppUser? get user => _user;
   bool get isAuthenticated => _isAuthenticated;
   String? get selectedProvince => _selectedProvince;
   String? get selectedMunicipality => _selectedMunicipality;
+  String? get errorMessage => _errorMessage;
+  bool get hasError => _errorMessage != null;
 
   List<Province> get provinces => saProvinces;
 
@@ -33,6 +37,11 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   void selectProvince(String province) {
     _selectedProvince = province;
     _selectedMunicipality = null;
@@ -45,15 +54,27 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   void signIn() {
-    _user = _userRepo.getUser();
-    _isAuthenticated = true;
-    notifyListeners();
+    try {
+      _errorMessage = null;
+      _user = _userRepo.getUser();
+      _isAuthenticated = true;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to sign in. Please try again.';
+      notifyListeners();
+    }
   }
 
   void completeOnboarding() {
-    _user = _userRepo.getUser();
-    _isAuthenticated = true;
-    notifyListeners();
+    try {
+      _errorMessage = null;
+      _user = _userRepo.getUser();
+      _isAuthenticated = true;
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to complete onboarding. Please try again.';
+      notifyListeners();
+    }
   }
 
   void signOut() {
@@ -61,6 +82,7 @@ class AuthViewModel extends ChangeNotifier {
     _isAuthenticated = false;
     _selectedProvince = null;
     _selectedMunicipality = null;
+    _errorMessage = null;
     notifyListeners();
   }
 }

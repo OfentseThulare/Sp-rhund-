@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/splash/splash_screen.dart';
 import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/auth/sign_up_province_screen.dart';
-import '../screens/auth/sign_up_details_screen.dart';
 import '../screens/link_accounts/link_accounts_screen.dart';
 import '../screens/home/dashboard_screen.dart';
 import '../screens/home/bill_history_screen.dart';
 import '../screens/home/bill_detail_screen.dart';
+import '../screens/home/notifications_screen.dart';
 import '../screens/area/service_status_screen.dart';
 import '../screens/disputes/disputes_list_screen.dart';
 import '../screens/disputes/dispute_detail_screen.dart';
@@ -27,15 +26,11 @@ final appRouter = GoRouter(
       builder: (context, state) => const OnboardingScreen(),
     ),
     GoRoute(
-      path: '/signup/province',
+      path: '/signup',
       builder: (context, state) => const SignUpProvinceScreen(),
     ),
     GoRoute(
-      path: '/signup/details',
-      builder: (context, state) => const SignUpDetailsScreen(),
-    ),
-    GoRoute(
-      path: '/link-accounts',
+      path: '/link-account',
       builder: (context, state) => const LinkAccountsScreen(),
     ),
     ShellRoute(
@@ -53,6 +48,10 @@ final appRouter = GoRouter(
               path: 'bill/:id',
               builder: (context, state) =>
                   BillDetailScreen(billId: state.pathParameters['id']!),
+            ),
+            GoRoute(
+              path: 'notifications',
+              builder: (context, state) => const NotificationsScreen(),
             ),
           ],
         ),

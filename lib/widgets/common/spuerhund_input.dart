@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 
 class SpuerhundInput extends StatelessWidget {
   final String label;
@@ -32,11 +33,7 @@ class SpuerhundInput extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppColours.slate,
-          ),
+          style: AppTypography.labelLarge,
         ),
         const SizedBox(height: 6),
         TextFormField(
@@ -44,6 +41,8 @@ class SpuerhundInput extends StatelessWidget {
           validator: validator,
           keyboardType: keyboardType,
           obscureText: obscureText,
+          style: const TextStyle(color: AppColours.textPrimary),
+          cursorColor: AppColours.primaryPurple,
           decoration: InputDecoration(
             hintText: hint,
             suffixIcon: suffixIcon,

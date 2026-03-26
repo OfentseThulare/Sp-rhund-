@@ -1,20 +1,29 @@
 import 'package:flutter/foundation.dart';
+import '../data/repositories/interfaces/i_bill_repository.dart';
 import '../data/repositories/bill_repository.dart';
 import '../models/bill.dart';
 
 class AccountsViewModel extends ChangeNotifier {
-  final BillRepository _billRepo;
+  final IBillRepository _billRepo;
 
   List<Bill> _bills = [];
   String _activeFilter = 'All';
+  String? _errorMessage;
 
-  AccountsViewModel({BillRepository? billRepo})
+  AccountsViewModel({IBillRepository? billRepo})
       : _billRepo = billRepo ?? BillRepository() {
     loadData();
   }
 
   List<Bill> get bills => _bills;
   String get activeFilter => _activeFilter;
+  String? get errorMessage => _errorMessage;
+  bool get hasError => _errorMessage != null;
+
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
 
   Bill? getBillById(String id) => _billRepo.getBillById(id);
 
@@ -23,18 +32,32 @@ class AccountsViewModel extends ChangeNotifier {
     if (filter == 'All') {
       _bills = _billRepo.getBills();
     } else {
-      _bills = _billRepo.getBills(); // mock: no per-service filtering
+      _bills = _billRepo.getBills();
     }
     notifyListeners();
   }
 
   void loadData() {
-    _bills = _billRepo.getBills();
-    notifyListeners();
+    try {
+      _errorMessage = null;
+      _bills = _billRepo.getBills();
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to load bills. Pull to refresh.';
+      notifyListeners();
+    }
   }
 
   Future<void> refresh() async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    loadData();
+    try {
+      _errorMessage = null;
+      notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 800));
+      _bills = _billRepo.getBills();
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to refresh bills. Pull to refresh.';
+      notifyListeners();
+    }
   }
 }

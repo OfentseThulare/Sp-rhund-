@@ -44,7 +44,7 @@ class _SpuerhundCardState extends State<SpuerhundCard>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final gestureDetector = GestureDetector(
       onTapDown: widget.onTap != null ? (_) => _scaleController.forward() : null,
       onTapUp: widget.onTap != null ? (_) {
         _scaleController.reverse();
@@ -60,22 +60,24 @@ class _SpuerhundCardState extends State<SpuerhundCard>
         child: Container(
           padding: widget.padding,
           decoration: BoxDecoration(
-            color: AppColours.pureWhite,
+            color: AppColours.surface,
             borderRadius: BorderRadius.circular(16),
             border: widget.borderColor != null
-                ? Border(left: BorderSide(color: widget.borderColor!, width: 3))
-                : null,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+                ? Border(left: BorderSide(color: widget.borderColor!, width: 4))
+                : Border.all(color: AppColours.borderSubtle),
           ),
           child: widget.child,
         ),
       ),
     );
+
+    if (widget.onTap != null) {
+      return Semantics(
+        button: true,
+        label: 'Interactive card',
+        child: gestureDetector,
+      );
+    }
+    return gestureDetector;
   }
 }

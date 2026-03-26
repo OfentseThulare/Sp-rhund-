@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 
 class QuickActionsRow extends StatelessWidget {
   const QuickActionsRow({super.key});
@@ -13,11 +14,11 @@ class QuickActionsRow extends StatelessWidget {
         _QuickAction(
           icon: Icons.payment_rounded,
           label: 'Pay',
-          color: AppColours.ash,
+          color: AppColours.textTertiary,
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Payment feature coming soon'),
+                content: Text('Payment integration available in the full version'),
                 duration: Duration(seconds: 2),
               ),
             );
@@ -36,8 +37,8 @@ class QuickActionsRow extends StatelessWidget {
           onTap: () => context.go('/disputes'),
         ),
         _QuickAction(
-          icon: Icons.contacts_outlined,
-          label: 'Contacts',
+          icon: Icons.more_horiz_rounded,
+          label: 'More',
           color: AppColours.primaryPurple,
           onTap: () => context.go('/contacts'),
         ),
@@ -61,29 +62,44 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
+    final isDisabled = color == AppColours.textTertiary;
+
+    final semanticLabels = const {
+      'Pay': 'Pay bills',
+      'History': 'View bill history',
+      'Report': 'Report an issue',
+      'More': 'More options',
+    };
+
+    return Semantics(
+      button: true,
+      label: semanticLabels[label] ?? label,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
           Container(
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: isDisabled
+                  ? AppColours.surface
+                  : color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
+              border: Border.all(color: AppColours.borderSubtle),
             ),
             child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(height: 6),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
+            style: AppTypography.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
-              color: color == AppColours.ash ? AppColours.ash : AppColours.nearBlack,
+              color: isDisabled ? AppColours.textTertiary : AppColours.textSecondary,
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -16,27 +17,25 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColours.nearBlack,
-            ),
+            style: AppTypography.amountMedium,
           ),
           if (actionLabel != null)
-            GestureDetector(
-              onTap: onAction,
-              child: Text(
-                actionLabel!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColours.primaryPurple,
+            Semantics(
+              button: true,
+              label: '$actionLabel $title',
+              child: GestureDetector(
+                onTap: onAction,
+                child: Text(
+                  actionLabel!,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: AppColours.primaryPurple,
+                  ),
                 ),
               ),
             ),

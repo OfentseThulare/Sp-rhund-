@@ -1,222 +1,327 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../../theme/colours.dart';
-import '../../models/dispute.dart';
-import '../../view_models/disputes_view_model.dart';
+import '../../theme/typography.dart';
 import '../../widgets/common/status_badge.dart';
 
-class DisputeDetailScreen extends StatelessWidget {
+class DisputeDetailScreen extends StatefulWidget {
   final String disputeId;
   const DisputeDetailScreen({super.key, required this.disputeId});
 
   @override
-  Widget build(BuildContext context) {
-    final dispute = context.read<DisputesViewModel>().getById(disputeId);
-    if (dispute == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Dispute')),
-        body: const Center(child: Text('Dispute not found')),
-      );
+  State<DisputeDetailScreen> createState() => _DisputeDetailScreenState();
+}
+
+class _DisputeDetailScreenState extends State<DisputeDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+  bool _animationStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _pulseAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_animationStarted) {
+      _animationStarted = true;
+      final reduceMotion = MediaQuery.of(context).disableAnimations;
+      if (!reduceMotion) {
+        _pulseController.repeat(reverse: true);
+      }
     }
+  }
 
-    final dateFormat = DateFormat('d MMMM yyyy');
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColours.pureWhite,
+      backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
+        backgroundColor: AppColours.voidBlack,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColours.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text(dispute.ticketNumber),
+        title: Semantics(
+          header: true,
+          child: Text(
+            'Dispute Details',
+            style: AppTypography.headlineSmall,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _badgeForStatus(dispute.status),
-            const SizedBox(height: 16),
-            Text(
-              dispute.title,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColours.nearBlack,
-              ),
+            // ID and status row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'WD-2026-0041',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColours.textSecondary,
+                  ),
+                ),
+                const StatusBadge(label: 'Under Review', color: AppColours.amber),
+              ],
             ),
             const SizedBox(height: 24),
-            if (dispute.description != null) ...[
-              const Text(
-                'Description',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColours.slate),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                dispute.description!,
-                style: const TextStyle(fontSize: 15, color: AppColours.nearBlack, height: 1.5),
-              ),
-              const SizedBox(height: 24),
-            ],
-            _detailRow('Service Type', dispute.serviceType ?? 'N/A'),
-            _detailRow('Dispute Type', dispute.disputeType ?? 'N/A'),
-            _detailRow('Created', dateFormat.format(dispute.createdAt)),
-            if (dispute.updatedAt != null)
-              _detailRow('Last Updated', dateFormat.format(dispute.updatedAt!)),
-            const SizedBox(height: 32),
-            const Text(
-              'Timeline',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColours.nearBlack),
+
+            // Status Timeline
+            _buildTimelineStep(
+              label: 'Submitted',
+              date: '12 Mar 2026',
+              state: _StepState.completed,
+              isLast: false,
+            ),
+            _buildTimelineStep(
+              label: 'In Progress',
+              date: '15 Mar 2026',
+              state: _StepState.completed,
+              isLast: false,
+            ),
+            _buildTimelineStep(
+              label: 'Under Review',
+              date: '20 Mar 2026',
+              state: _StepState.current,
+              isLast: false,
+            ),
+            _buildTimelineStep(
+              label: 'Resolved',
+              date: null,
+              state: _StepState.pending,
+              isLast: true,
+            ),
+
+            const SizedBox(height: 24),
+
+            // Original Bill Reference
+            _buildInfoCard(
+              title: 'Original Bill Reference',
+              rows: const [
+                _InfoRow('Service', 'Water'),
+                _InfoRow('Period', 'March 2026'),
+                _InfoRow('Amount', 'R 456.78'),
+                _InfoRow('Account', 'ACC-TSH-2026-0847'),
+              ],
             ),
             const SizedBox(height: 16),
-            _buildTimeline(dispute),
+
+            // Dispute Reason
+            _buildTextCard(
+              title: 'Dispute Reason',
+              body:
+                  'Incorrect meter reading. The recorded consumption of 24kL is significantly higher than our typical usage of 12 to 14kL per month. We request a physical meter verification.',
+            ),
+            const SizedBox(height: 16),
+
+            // Municipality Response
+            _buildTextCard(
+              title: 'Municipality Response',
+              body:
+                  'Your dispute has been escalated to the technical team for meter verification. A field inspector will be assigned within 5 working days.',
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _badgeForStatus(DisputeStatus status) {
-    Color color;
-    switch (status) {
-      case DisputeStatus.submitted:
-        color = AppColours.slate;
-      case DisputeStatus.inProgress:
-        color = AppColours.amber;
-      case DisputeStatus.underReview:
-        color = const Color(0xFF3B82F6);
-      case DisputeStatus.resolved:
-        color = AppColours.emerald;
-    }
-    return StatusBadge(label: status.displayName, color: color);
+  Widget _buildTimelineStep({
+    required String label,
+    required String? date,
+    required _StepState state,
+    required bool isLast,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            if (state == _StepState.current)
+              AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColours.primaryPurple.withValues(alpha: _pulseAnimation.value),
+                    ),
+                  );
+                },
+              )
+            else
+              Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: state == _StepState.completed
+                      ? AppColours.emerald
+                      : AppColours.surface,
+                  border: state == _StepState.pending
+                      ? Border.all(color: AppColours.borderLight, width: 1.5)
+                      : null,
+                ),
+              ),
+            if (!isLast)
+              Container(
+                width: 2,
+                height: 40,
+                color: state == _StepState.completed
+                    ? AppColours.emerald.withValues(alpha: 0.4)
+                    : AppColours.borderSubtle,
+              ),
+          ],
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: state == _StepState.pending
+                        ? AppColours.textTertiary
+                        : AppColours.textPrimary,
+                  ),
+                ),
+                if (date != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      date,
+                      style: AppTypography.bodySmall,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget _detailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
+  Widget _buildInfoCard({
+    required String title,
+    required List<_InfoRow> rows,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColours.surface,
+        border: Border.all(color: AppColours.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 14, color: AppColours.slate),
+          Text(
+            title,
+            style: AppTypography.labelLarge.copyWith(
+              fontWeight: FontWeight.w600,
             ),
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColours.nearBlack,
-              ),
-            ),
-          ),
+          const SizedBox(height: 12),
+          ...rows.asMap().entries.map((entry) {
+            final i = entry.key;
+            final row = entry.value;
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      row.label,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontSize: 13,
+                        color: AppColours.textTertiary,
+                      ),
+                    ),
+                    Text(
+                      row.value,
+                      style: AppTypography.labelLarge.copyWith(
+                        color: AppColours.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                if (i < rows.length - 1)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Divider(height: 1, color: AppColours.divider),
+                  ),
+              ],
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildTimeline(Dispute dispute) {
-    final steps = <_TimelineStep>[
-      _TimelineStep('Submitted', dispute.createdAt, true),
-    ];
-
-    if (dispute.status == DisputeStatus.inProgress ||
-        dispute.status == DisputeStatus.underReview ||
-        dispute.status == DisputeStatus.resolved) {
-      steps.add(_TimelineStep('In Progress', dispute.updatedAt ?? dispute.createdAt, true));
-    }
-
-    if (dispute.status == DisputeStatus.underReview ||
-        dispute.status == DisputeStatus.resolved) {
-      steps.add(_TimelineStep('Under Review', dispute.updatedAt ?? dispute.createdAt, true));
-    }
-
-    if (dispute.status == DisputeStatus.resolved) {
-      steps.add(_TimelineStep('Resolved', dispute.updatedAt ?? dispute.createdAt, true));
-    }
-
-    // Add pending steps
-    if (dispute.status != DisputeStatus.resolved) {
-      if (dispute.status == DisputeStatus.submitted) {
-        steps.add(const _TimelineStep('In Progress', null, false));
-      }
-      if (dispute.status == DisputeStatus.submitted ||
-          dispute.status == DisputeStatus.inProgress) {
-        steps.add(const _TimelineStep('Under Review', null, false));
-      }
-      steps.add(const _TimelineStep('Resolved', null, false));
-    }
-
-    final dateFormat = DateFormat('d MMM yyyy');
-
-    return Column(
-      children: steps.asMap().entries.map((entry) {
-        final i = entry.key;
-        final step = entry.value;
-        final isLast = i == steps.length - 1;
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: step.isComplete ? AppColours.primaryPurple : AppColours.fog,
-                  ),
-                ),
-                if (!isLast)
-                  Container(
-                    width: 2,
-                    height: 40,
-                    color: step.isComplete ? AppColours.primaryPurple : AppColours.fog,
-                  ),
-              ],
+  Widget _buildTextCard({
+    required String title,
+    required String body,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColours.surface,
+        border: Border.all(color: AppColours.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: AppTypography.labelLarge.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      step.label,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: step.isComplete ? AppColours.nearBlack : AppColours.ash,
-                      ),
-                    ),
-                    if (step.date != null)
-                      Text(
-                        dateFormat.format(step.date!),
-                        style: const TextStyle(fontSize: 12, color: AppColours.slate),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      }).toList(),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            body,
+            style: AppTypography.bodyMedium,
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _TimelineStep {
-  final String label;
-  final DateTime? date;
-  final bool isComplete;
+enum _StepState { completed, current, pending }
 
-  const _TimelineStep(this.label, this.date, this.isComplete);
+class _InfoRow {
+  final String label;
+  final String value;
+  const _InfoRow(this.label, this.value);
 }

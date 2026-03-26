@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/account.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 import '../common/status_badge.dart';
 
 class AccountTile extends StatelessWidget {
@@ -21,15 +22,9 @@ class AccountTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColours.pureWhite,
+        color: AppColours.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppColours.borderSubtle),
       ),
       child: Row(
         children: [
@@ -41,19 +36,16 @@ class AccountTile extends StatelessWidget {
               children: [
                 Text(
                   service.serviceType.displayName,
-                  style: const TextStyle(
+                  style: AppTypography.amountMedium.copyWith(
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColours.nearBlack,
                   ),
                 ),
                 const SizedBox(height: 2),
                 if (service.dueDate != null)
                   Text(
                     'Due ${dateFormat.format(service.dueDate!)}',
-                    style: const TextStyle(
+                    style: AppTypography.bodySmall.copyWith(
                       fontSize: 13,
-                      color: AppColours.slate,
                     ),
                   ),
               ],
@@ -64,10 +56,8 @@ class AccountTile extends StatelessWidget {
             children: [
               Text(
                 currencyFormat.format(service.currentBalance),
-                style: const TextStyle(
+                style: AppTypography.amountMedium.copyWith(
                   fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppColours.nearBlack,
                 ),
               ),
               const SizedBox(height: 4),
@@ -86,7 +76,7 @@ class AccountTile extends StatelessWidget {
     switch (service.serviceType) {
       case ServiceType.water:
         icon = Icons.water_drop_rounded;
-        color = const Color(0xFF3B82F6);
+        color = AppColours.info;
       case ServiceType.electricity:
         icon = Icons.bolt_rounded;
         color = AppColours.amber;
@@ -99,14 +89,14 @@ class AccountTile extends StatelessWidget {
         color = AppColours.primaryPurple;
       case ServiceType.sanitation:
         icon = Icons.plumbing_rounded;
-        color = const Color(0xFF3B82F6);
+        color = AppColours.info;
     }
 
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(icon, color: color, size: 22),

@@ -1,141 +1,233 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../../theme/colours.dart';
-import '../../models/bill.dart';
-import '../../view_models/accounts_view_model.dart';
+import '../../theme/typography.dart';
 import '../../widgets/common/status_badge.dart';
 
-class BillHistoryScreen extends StatelessWidget {
+class _BillItem {
+  final IconData icon;
+  final Color color;
+  final String service;
+  final String period;
+  final String amount;
+  final bool isPaid;
+
+  const _BillItem({
+    required this.icon,
+    required this.color,
+    required this.service,
+    required this.period,
+    required this.amount,
+    required this.isPaid,
+  });
+}
+
+class BillHistoryScreen extends StatefulWidget {
   const BillHistoryScreen({super.key});
 
-  static const _filters = ['All', 'Water', 'Electricity', 'Rates', 'Waste'];
+  @override
+  State<BillHistoryScreen> createState() => _BillHistoryScreenState();
+}
+
+class _BillHistoryScreenState extends State<BillHistoryScreen> {
+  static const _months = [
+    'Mar 2026',
+    'Feb 2026',
+    'Jan 2026',
+    'Dec 2025',
+    'Nov 2025',
+    'Oct 2025',
+  ];
+
+  int _selectedMonth = 0;
+
+  static final _bills = [
+    _BillItem(
+      icon: Icons.water_drop_rounded,
+      color: AppColours.info,
+      service: 'Water',
+      period: 'Mar 2026',
+      amount: 'R 456.78',
+      isPaid: false,
+    ),
+    _BillItem(
+      icon: Icons.flash_on_rounded,
+      color: AppColours.amber,
+      service: 'Electricity',
+      period: 'Mar 2026',
+      amount: 'R 892.45',
+      isPaid: false,
+    ),
+    _BillItem(
+      icon: Icons.account_balance_rounded,
+      color: AppColours.primaryPurple,
+      service: 'Rates & Taxes',
+      period: 'Mar 2026',
+      amount: 'R 1,247.00',
+      isPaid: true,
+    ),
+    _BillItem(
+      icon: Icons.delete_outline_rounded,
+      color: AppColours.emerald,
+      service: 'Waste',
+      period: 'Mar 2026',
+      amount: 'R 251.40',
+      isPaid: false,
+    ),
+    _BillItem(
+      icon: Icons.water_drop_rounded,
+      color: AppColours.info,
+      service: 'Water',
+      period: 'Feb 2026',
+      amount: 'R 423.12',
+      isPaid: true,
+    ),
+    _BillItem(
+      icon: Icons.flash_on_rounded,
+      color: AppColours.amber,
+      service: 'Electricity',
+      period: 'Feb 2026',
+      amount: 'R 834.90',
+      isPaid: true,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<AccountsViewModel>();
-    final currencyFormat = NumberFormat.currency(
-      locale: 'en_ZA',
-      symbol: 'R ',
-      decimalDigits: 2,
-    );
-
     return Scaffold(
-      backgroundColor: AppColours.pureWhite,
+      backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
+        backgroundColor: AppColours.voidBlack,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+            color: AppColours.textPrimary,
+          ),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Bill History'),
+        title: Semantics(
+          header: true,
+          child: Text(
+            'Bill History',
+            style: AppTypography.headlineSmall,
+          ),
+        ),
       ),
-      body: RefreshIndicator(
-        color: AppColours.primaryPurple,
-        onRefresh: vm.refresh,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 38,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _filters.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, i) {
-                  final isActive = vm.activeFilter == _filters[i];
-                  return GestureDetector(
-                    onTap: () => vm.setFilter(_filters[i]),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? AppColours.primaryPurple
-                            : AppColours.cloudGrey,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        _filters[i],
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: isActive
-                              ? AppColours.pureWhite
-                              : AppColours.nearBlack,
-                        ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 44,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              itemCount: _months.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final isSelected = _selectedMonth == index;
+                return Semantics(
+                  button: true,
+                  label: 'Filter by ${_months[index]}',
+                  child: GestureDetector(
+                  onTap: () => setState(() => _selectedMonth = index),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColours.primaryPurple
+                          : AppColours.surface,
+                      border: isSelected
+                          ? null
+                          : Border.all(color: AppColours.borderLight),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      _months[index],
+                      style: AppTypography.labelLarge.copyWith(
+                        color: isSelected
+                            ? AppColours.pureWhite
+                            : AppColours.textSecondary,
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            ...vm.bills.map((bill) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _BillCard(
-                    bill: bill,
-                    formattedAmount: currencyFormat.format(bill.totalAmount),
-                    onTap: () => context.push('/home/bill/${bill.id}'),
                   ),
-                )),
-            const SizedBox(height: 24),
-          ],
-        ),
+                ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _bills.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final bill = _bills[index];
+                return _BillCard(
+                  bill: bill,
+                  onTap: () => context.push('/home/bill/$index'),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _BillCard extends StatelessWidget {
-  final Bill bill;
-  final String formattedAmount;
+  final _BillItem bill;
   final VoidCallback onTap;
 
-  const _BillCard({
-    required this.bill,
-    required this.formattedAmount,
-    required this.onTap,
-  });
+  const _BillCard({required this.bill, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
+    return Semantics(
+      button: true,
+      label: 'View bill details for ${bill.service}',
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColours.pureWhite,
+          color: AppColours.surface,
+          border: Border.all(color: AppColours.borderSubtle),
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
           children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: bill.color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                bill.icon,
+                color: bill.color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    bill.period,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColours.nearBlack,
+                    bill.service,
+                    style: AppTypography.amountMedium.copyWith(
+                      fontSize: 15,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
-                    '${bill.serviceCount} services',
-                    style: const TextStyle(
+                    bill.period,
+                    style: AppTypography.bodySmall.copyWith(
                       fontSize: 13,
-                      color: AppColours.slate,
                     ),
                   ),
                 ],
@@ -145,22 +237,17 @@ class _BillCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formattedAmount,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColours.nearBlack,
+                  bill.amount,
+                  style: AppTypography.amountMedium.copyWith(
+                    fontSize: 15,
                   ),
                 ),
                 const SizedBox(height: 4),
-                bill.status == BillStatus.paid
-                    ? StatusBadge.paid()
-                    : StatusBadge.unpaid(),
+                bill.isPaid ? StatusBadge.paid() : StatusBadge.unpaid(),
               ],
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.chevron_right, color: AppColours.fog),
-          ],
+            ],
+          ),
         ),
       ),
     );

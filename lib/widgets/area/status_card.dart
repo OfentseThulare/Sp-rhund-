@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/service_status.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 import '../common/status_badge.dart';
 
 class StatusCard extends StatelessWidget {
@@ -19,7 +20,7 @@ class StatusCard extends StatelessWidget {
       case AlertType.loadshedding:
         return AppColours.primaryPurple;
       case AlertType.info:
-        return const Color(0xFF3B82F6);
+        return AppColours.info;
     }
   }
 
@@ -28,16 +29,9 @@ class StatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColours.pureWhite,
+        color: AppColours.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border(left: BorderSide(color: _borderColor, width: 3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border(left: BorderSide(color: _borderColor, width: 4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,22 +40,20 @@ class StatusCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             alert.title,
-            style: const TextStyle(
+            style: AppTypography.amountMedium.copyWith(
               fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColours.nearBlack,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             alert.area,
-            style: const TextStyle(fontSize: 13, color: AppColours.slate),
+            style: AppTypography.bodySmall.copyWith(fontSize: 13),
           ),
           if (alert.description != null) ...[
             const SizedBox(height: 4),
             Text(
               alert.description!,
-              style: const TextStyle(fontSize: 13, color: AppColours.slate),
+              style: AppTypography.bodySmall.copyWith(fontSize: 13),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

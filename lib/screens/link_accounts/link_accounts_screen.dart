@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/colours.dart';
+import '../../theme/typography.dart';
 import '../../widgets/common/spuerhund_button.dart';
 import '../../widgets/common/spuerhund_input.dart';
 
@@ -12,23 +13,22 @@ class LinkAccountsScreen extends StatefulWidget {
 }
 
 class _LinkAccountsScreenState extends State<LinkAccountsScreen> {
-  int _selectedPropertyType = 0;
+  final _formKey = GlobalKey<FormState>();
   final _accountController = TextEditingController();
-  final Set<String> _selectedServices = {'Water', 'Electricity'};
+  String _selectedMunicipality = 'City of Tshwane';
+  String _selectedPropertyType = 'Flat';
+  bool _isLoading = false;
 
-  static const _propertyTypes = [
-    ('Individual Property', Icons.home_rounded),
-    ('Sectional Title', Icons.apartment_rounded),
-    ('Estate', Icons.villa_rounded),
+  static const _municipalities = [
+    'City of Tshwane',
+    'City of Johannesburg',
   ];
 
-  static const _services = [
-    'Water',
-    'Electricity',
-    'Rates and Taxes',
-    'Waste',
-    'Sanitation',
-    'Refuse Removal',
+  static const _propertyTypes = [
+    'Flat',
+    'Townhouse',
+    'House',
+    'Commercial',
   ];
 
   @override
@@ -37,162 +37,185 @@ class _LinkAccountsScreenState extends State<LinkAccountsScreen> {
     super.dispose();
   }
 
+  Future<void> _connectAccount() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted) {
+      context.go('/home');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColours.pureWhite,
+      backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () => context.go('/signup/details'),
+          icon: const Icon(Icons.arrow_back_rounded, color: AppColours.textPrimary),
+          onPressed: () => context.go('/signup'),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Link Your Accounts',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: AppColours.nearBlack,
+              const Icon(
+                Icons.apartment_rounded,
+                size: 48,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 24),
+              Semantics(
+                header: true,
+                child: Text(
+                  'Link Your Municipal Account',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.headlineLarge.copyWith(
+                    fontSize: 26,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Connect your municipal accounts to start tracking.',
-                style: TextStyle(fontSize: 15, color: AppColours.slate),
+              Text(
+                'Connect your account to see your bills and alerts.',
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyLarge.copyWith(
+                  color: AppColours.textSecondary,
+                ),
               ),
-              const SizedBox(height: 24),
-              Row(
-                children: List.generate(_propertyTypes.length, (i) {
-                  final isSelected = i == _selectedPropertyType;
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () =>
-                          setState(() => _selectedPropertyType = i),
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          right: i < _propertyTypes.length - 1 ? 8 : 0,
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColours.whisperPurple
-                              : AppColours.cloudGrey,
-                          borderRadius: BorderRadius.circular(16),
-                          border: isSelected
-                              ? Border.all(
-                                  color: AppColours.primaryPurple, width: 1.5)
-                              : null,
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              _propertyTypes[i].$2,
-                              size: 28,
-                              color: isSelected
-                                  ? AppColours.primaryPurple
-                                  : AppColours.slate,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _propertyTypes[i].$1,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: isSelected
-                                    ? AppColours.primaryPurple
-                                    : AppColours.slate,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+              const SizedBox(height: 32),
+              Container(
+                height: 52,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: AppColours.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColours.borderLight),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedMunicipality,
+                    isExpanded: true,
+                    dropdownColor: AppColours.surface,
+                    style: AppTypography.bodyLarge.copyWith(
+                      color: Colors.white,
+                      fontSize: 15,
                     ),
-                  );
-                }),
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColours.textSecondary,
+                    ),
+                    items: _municipalities.map((m) {
+                      return DropdownMenuItem<String>(
+                        value: m,
+                        child: Text(m),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => _selectedMunicipality = value);
+                      }
+                    },
+                  ),
+                ),
               ),
-              const SizedBox(height: 24),
-              SpuerhundInput(
+              const SizedBox(height: 16),
+              Form(
+                key: _formKey,
+                child: SpuerhundInput(
                 label: 'Account Number',
                 hint: 'Enter your account number',
                 controller: _accountController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Find this on your municipal statement.',
-                style: TextStyle(fontSize: 12, color: AppColours.slate),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Services to track',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColours.slate,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _services.map((s) {
-                  final isSelected = _selectedServices.contains(s);
-                  return GestureDetector(
-                    onTap: () => setState(() {
-                      if (isSelected) {
-                        _selectedServices.remove(s);
-                      } else {
-                        _selectedServices.add(s);
-                      }
-                    }),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColours.primaryPurple
-                            : AppColours.cloudGrey,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        s,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected
-                              ? AppColours.pureWhite
-                              : AppColours.nearBlack,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your account number';
+                  }
+                  return null;
+                },
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.help_outline_rounded,
+                    color: AppColours.textSecondary,
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Find your account number on your municipal statement',
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  },
+                ),
+              ),
               ),
               const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  '+ Add another account',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColours.primaryPurple,
-                  ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _propertyTypes.map((type) {
+                    final isSelected = _selectedPropertyType == type;
+                    return ChoiceChip(
+                      label: Text(type),
+                      selected: isSelected,
+                      onSelected: (_) {
+                        setState(() => _selectedPropertyType = type);
+                      },
+                      selectedColor: AppColours.primaryPurple,
+                      backgroundColor: AppColours.surface,
+                      side: BorderSide(
+                        color: isSelected
+                            ? AppColours.primaryPurple
+                            : AppColours.borderLight,
+                      ),
+                      labelStyle: TextStyle(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColours.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      showCheckmark: false,
+                    );
+                  }).toList(),
                 ),
               ),
               const SizedBox(height: 32),
               SpuerhundButton(
-                label: 'Link Accounts',
-                onPressed: () => context.go('/home'),
+                label: 'Connect Account',
+                isLoading: _isLoading,
+                onPressed: _isLoading ? null : () {
+                  if (_formKey.currentState!.validate()) {
+                    _connectAccount();
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              Semantics(
+                button: true,
+                label: 'Skip account linking',
+                child: GestureDetector(
+                  onTap: () => context.go('/home'),
+                  child: SizedBox(
+                    height: 44,
+                    child: Center(
+                      child: Text(
+                        'Skip for now',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColours.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 32),
             ],

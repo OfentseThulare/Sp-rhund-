@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/colours.dart';
-import '../../models/contact.dart';
-import '../../data/repositories/contact_repository.dart';
+import '../../theme/typography.dart';
 
 class ContactsScreen extends StatefulWidget {
   const ContactsScreen({super.key});
@@ -11,21 +10,89 @@ class ContactsScreen extends StatefulWidget {
 }
 
 class _ContactsScreenState extends State<ContactsScreen> {
-  final _repo = ContactRepository();
   final _searchController = TextEditingController();
-  List<Contact> _filtered = [];
+  String _searchQuery = '';
+  int _selectedCategory = 0;
+
+  static const List<String> _categories = [
+    'All',
+    'Emergency',
+    'Billing',
+    'Technical',
+    'General',
+  ];
+
+  static const List<_MockContact> _allContacts = [
+    _MockContact(
+      category: 'Emergency',
+      name: 'Emergency Services',
+      phone: '10177',
+      email: null,
+      hours: '24/7',
+    ),
+    _MockContact(
+      category: 'Billing',
+      name: 'Revenue & Billing',
+      phone: '012 358 4911',
+      email: 'revenue@tshwane.gov.za',
+      hours: 'Mon to Fri, 07:30 to 16:00',
+    ),
+    _MockContact(
+      category: 'Technical',
+      name: 'Water & Sanitation',
+      phone: '012 358 0911',
+      email: 'water@tshwane.gov.za',
+      hours: 'Mon to Fri, 07:30 to 16:00',
+    ),
+    _MockContact(
+      category: 'Technical',
+      name: 'Electricity Faults',
+      phone: '012 358 9999',
+      email: 'electricity@tshwane.gov.za',
+      hours: '24/7',
+    ),
+    _MockContact(
+      category: 'General',
+      name: 'Customer Care Centre',
+      phone: '012 358 9999',
+      email: 'customercare@tshwane.gov.za',
+      hours: 'Mon to Fri, 07:30 to 16:00',
+    ),
+    _MockContact(
+      category: 'General',
+      name: 'Tshwane Connect',
+      phone: '012 358 4636',
+      email: null,
+      hours: 'Mon to Fri, 08:00 to 17:00',
+    ),
+  ];
+
+  List<_MockContact> get _filteredContacts {
+    var contacts = _allContacts.toList();
+
+    if (_selectedCategory > 0) {
+      final category = _categories[_selectedCategory];
+      contacts = contacts.where((c) => c.category == category).toList();
+    }
+
+    if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
+      contacts = contacts.where((c) {
+        return c.name.toLowerCase().contains(query) ||
+            c.category.toLowerCase().contains(query) ||
+            (c.phone?.toLowerCase().contains(query) ?? false) ||
+            (c.email?.toLowerCase().contains(query) ?? false);
+      }).toList();
+    }
+
+    return contacts;
+  }
 
   @override
   void initState() {
     super.initState();
-    _filtered = _repo.getContacts();
-    _searchController.addListener(_onSearch);
-  }
-
-  void _onSearch() {
-    final query = _searchController.text;
-    setState(() {
-      _filtered = query.isEmpty ? _repo.getContacts() : _repo.search(query);
+    _searchController.addListener(() {
+      setState(() => _searchQuery = _searchController.text);
     });
   }
 
@@ -37,135 +104,170 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final councillors = _filtered.where((c) => c.type == ContactType.councillor).toList();
-    final departments = _filtered.where((c) => c.type == ContactType.department).toList();
-    final emergency = _filtered.where((c) => c.type == ContactType.emergency).toList();
+    final contacts = _filteredContacts;
 
     return Scaffold(
-      backgroundColor: AppColours.pureWhite,
+      backgroundColor: AppColours.voidBlack,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
-            const Text(
-              'Contacts',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColours.nearBlack,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: Semantics(
+                header: true,
+                child: Text(
+                  'Contacts',
+                  style: AppTypography.headlineMedium,
+                ),
               ),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search departments...',
-                prefixIcon: const Icon(Icons.search, color: AppColours.slate),
-                filled: true,
-                fillColor: AppColours.cloudGrey,
-                border: OutlineInputBorder(
+
+            // Search input
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Container(
+                height: 48,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: AppColours.surface,
+                  border: Border.all(color: AppColours.borderLight),
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.search, size: 20, color: AppColours.textTertiary),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        style: AppTypography.bodyMedium,
+                        decoration: InputDecoration(
+                          hintText: 'Search contacts...',
+                          hintStyle: AppTypography.bodyMedium.copyWith(
+                            color: AppColours.textTertiary,
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            ...councillors.map((c) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _CouncillorCard(contact: c),
-                )),
-            if (departments.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              const Text(
-                'Departments',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColours.nearBlack),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColours.pureWhite,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: departments.asMap().entries.map((entry) {
-                    final i = entry.key;
-                    final c = entry.value;
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            c.name,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            const SizedBox(height: 16),
+
+            // Category filter chips
+            SizedBox(
+              height: 36,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: List.generate(_categories.length, (index) {
+                    final isActive = _selectedCategory == index;
+                    return Padding(
+                      padding: EdgeInsets.only(right: index < _categories.length - 1 ? 8 : 0),
+                      child: Semantics(
+                        button: true,
+                        label: 'Filter ${_categories[index]} contacts',
+                        child: GestureDetector(
+                          onTap: () => setState(() => _selectedCategory = index),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isActive ? AppColours.primaryPurple : AppColours.surface,
+                            borderRadius: BorderRadius.circular(100),
+                            border: isActive
+                                ? null
+                                : Border.all(color: AppColours.borderLight),
                           ),
-                          subtitle: Text(c.phone ?? '', style: const TextStyle(fontSize: 13, color: AppColours.slate)),
-                          trailing: const Icon(Icons.chevron_right, color: AppColours.fog),
-                        ),
-                        if (i < departments.length - 1)
-                          const Divider(height: 0, indent: 16, endIndent: 16),
-                      ],
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-            if (emergency.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              const Text(
-                'Emergency Numbers',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColours.nearBlack),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColours.pureWhite,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: emergency.asMap().entries.map((entry) {
-                    final i = entry.key;
-                    final c = entry.value;
-                    return Column(
-                      children: [
-                        ListTile(
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: AppColours.crimson.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
+                          child: Text(
+                            _categories[index],
+                            style: AppTypography.labelLarge.copyWith(
+                              fontSize: 13,
+                              color: isActive
+                                  ? AppColours.textPrimary
+                                  : AppColours.textSecondary,
                             ),
-                            child: const Icon(Icons.emergency, color: AppColours.crimson, size: 20),
-                          ),
-                          title: Text(c.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-                          trailing: Text(
-                            c.phone ?? '',
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColours.primaryPurple),
                           ),
                         ),
-                        if (i < emergency.length - 1)
-                          const Divider(height: 0, indent: 16, endIndent: 16),
-                      ],
+                      ),
+                      ),
                     );
-                  }).toList(),
+                  }),
                 ),
               ),
-            ],
-            const SizedBox(height: 32),
+            ),
+            const SizedBox(height: 16),
+
+            // Contact list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  final contact = contacts[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColours.surface,
+                        border: Border.all(color: AppColours.borderSubtle),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            contact.name,
+                            style: AppTypography.amountMedium.copyWith(
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            contact.hours,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColours.textTertiary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              if (contact.phone != null)
+                                Semantics(
+                                  button: true,
+                                  label: 'Call ${contact.name}',
+                                  child: _ActionChip(
+                                    icon: Icons.phone_outlined,
+                                    label: 'Call',
+                                  ),
+                                ),
+                              if (contact.phone != null && contact.email != null)
+                                const SizedBox(width: 8),
+                              if (contact.email != null)
+                                Semantics(
+                                  button: true,
+                                  label: 'Email ${contact.name}',
+                                  child: _ActionChip(
+                                    icon: Icons.email_outlined,
+                                    label: 'Email',
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -173,71 +275,53 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 }
 
-class _CouncillorCard extends StatelessWidget {
-  final Contact contact;
-  const _CouncillorCard({required this.contact});
+class _ActionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColours.pureWhite,
-        borderRadius: BorderRadius.circular(16),
-        border: const Border(left: BorderSide(color: AppColours.primaryPurple, width: 3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: AppColours.primaryPurple),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          Icon(icon, size: 14, color: AppColours.primaryPurple),
+          const SizedBox(width: 6),
           Text(
-            contact.name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColours.nearBlack),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            contact.role ?? '',
-            style: const TextStyle(fontSize: 13, color: AppColours.slate),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.phone, size: 18),
-                  label: const Text('Call'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColours.primaryPurple,
-                    minimumSize: const Size(0, 40),
-                    shape: const StadiumBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.email_outlined, size: 18),
-                  label: const Text('Email'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColours.slate,
-                    side: const BorderSide(color: AppColours.fog),
-                    minimumSize: const Size(0, 40),
-                    shape: const StadiumBorder(),
-                  ),
-                ),
-              ),
-            ],
+            label,
+            style: AppTypography.labelLarge.copyWith(
+              fontSize: 13,
+              color: AppColours.primaryPurple,
+            ),
           ),
         ],
       ),
     );
   }
+}
+
+class _MockContact {
+  final String category;
+  final String name;
+  final String? phone;
+  final String? email;
+  final String hours;
+
+  const _MockContact({
+    required this.category,
+    required this.name,
+    required this.phone,
+    required this.email,
+    required this.hours,
+  });
 }

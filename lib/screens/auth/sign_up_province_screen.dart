@@ -1,219 +1,291 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import '../../theme/colours.dart';
-import '../../view_models/auth_view_model.dart';
+import '../../theme/typography.dart';
 import '../../widgets/common/spuerhund_button.dart';
+import '../../widgets/common/spuerhund_input.dart';
 
-class SignUpProvinceScreen extends StatelessWidget {
+class SignUpProvinceScreen extends StatefulWidget {
   const SignUpProvinceScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authVm = context.watch<AuthViewModel>();
+  State<SignUpProvinceScreen> createState() => _SignUpProvinceScreenState();
+}
 
+class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColours.pureWhite,
+      backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
+          icon: const Icon(Icons.arrow_back_rounded, color: AppColours.textPrimary),
           onPressed: () => context.go('/onboarding'),
         ),
-        title: const Text('Create Account'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _ProgressIndicator(step: 1),
-              const SizedBox(height: 32),
-              _SelectionCard(
-                label: 'Select Province',
-                value: authVm.selectedProvince,
-                onTap: () => _showProvincePicker(context, authVm),
+              const Icon(
+                Icons.shield_rounded,
+                size: 48,
+                color: Colors.white,
               ),
-              const SizedBox(height: 16),
-              _SelectionCard(
-                label: 'Select Municipality',
-                value: authVm.selectedMunicipality,
-                onTap: authVm.selectedProvince != null
-                    ? () => _showMunicipalityPicker(context, authVm)
-                    : null,
-              ),
-              const Spacer(),
-              SpuerhundButton(
-                label: 'Continue',
-                onPressed: authVm.selectedProvince != null &&
-                        authVm.selectedMunicipality != null
-                    ? () => context.go('/signup/details')
-                    : null,
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showProvincePicker(BuildContext context, AuthViewModel authVm) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => ListView(
-        shrinkWrap: true,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              'Select Province',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-          ),
-          ...authVm.provinces.map(
-            (p) => ListTile(
-              title: Text(p.name),
-              trailing: authVm.selectedProvince == p.name
-                  ? const Icon(Icons.check, color: AppColours.primaryPurple)
-                  : null,
-              onTap: () {
-                authVm.selectProvince(p.name);
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showMunicipalityPicker(BuildContext context, AuthViewModel authVm) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => ListView(
-        shrinkWrap: true,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              'Select Municipality',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-          ),
-          ...authVm.availableMunicipalities.map(
-            (m) => ListTile(
-              title: Text(m),
-              trailing: authVm.selectedMunicipality == m
-                  ? const Icon(Icons.check, color: AppColours.primaryPurple)
-                  : null,
-              onTap: () {
-                authVm.selectMunicipality(m);
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProgressIndicator extends StatelessWidget {
-  final int step;
-  const _ProgressIndicator({required this.step});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(3, (i) {
-        return Expanded(
-          child: Container(
-            height: 4,
-            margin: EdgeInsets.only(right: i < 2 ? 8 : 0),
-            decoration: BoxDecoration(
-              color: i < step
-                  ? AppColours.primaryPurple
-                  : AppColours.fog,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class _SelectionCard extends StatelessWidget {
-  final String label;
-  final String? value;
-  final VoidCallback? onTap;
-
-  const _SelectionCard({
-    required this.label,
-    this.value,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColours.cloudGrey,
-          borderRadius: BorderRadius.circular(16),
-          border: value != null
-              ? const Border(
-                  left: BorderSide(color: AppColours.primaryPurple, width: 3),
-                )
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColours.slate,
+              const SizedBox(height: 24),
+              Semantics(
+                header: true,
+                child: Text(
+                  'Get Started with Sp\u00FCrhund',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.headlineLarge.copyWith(
+                    fontSize: 26,
                   ),
                 ),
-                if (value != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    value!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColours.primaryPurple,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Create your account in seconds.',
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyLarge.copyWith(
+                  color: AppColours.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SpuerhundInput(
+                      label: 'Email',
+                      hint: 'Enter email',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!value.contains('@') || !value.contains('.')) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    SpuerhundInput(
+                      label: 'Password',
+                      hint: 'Password',
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: AppColours.textSecondary,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscurePassword = !_obscurePassword),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              SpuerhundButton(
+                label: 'Sign Up',
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    context.go('/link-account');
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Semantics(
+                  button: true,
+                  label: 'Log in to existing account',
+                  child: GestureDetector(
+                    onTap: () => context.go('/onboarding'),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Already have an account? ',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColours.textSecondary,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Log In',
+                            style: TextStyle(
+                              color: AppColours.primaryPurple,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: AppColours.borderLight,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Or',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColours.textTertiary,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: AppColours.borderLight,
                     ),
                   ),
                 ],
-              ],
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: onTap != null ? AppColours.slate : AppColours.fog,
-            ),
-          ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: Semantics(
+                      button: true,
+                      label: 'Sign in with Apple',
+                      child: GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Apple sign-in available in the full release')),
+                          );
+                        },
+                        child: Container(
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: AppColours.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColours.borderLight),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.apple, color: Colors.white, size: 24),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Apple',
+                              style: AppTypography.labelLarge.copyWith(
+                                color: AppColours.textPrimary,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Semantics(
+                      button: true,
+                      label: 'Sign in with Google',
+                      child: GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Google sign-in available in the full release')),
+                          );
+                        },
+                        child: Container(
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: AppColours.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColours.borderLight),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'G',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Google',
+                              style: AppTypography.labelLarge.copyWith(
+                                color: AppColours.textPrimary,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: 'By creating an account, you agree to our ',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColours.textTertiary,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: 'Terms & Conditions',
+                      style: TextStyle(color: AppColours.primaryPurple),
+                    ),
+                    TextSpan(text: ' and '),
+                    TextSpan(
+                      text: 'Privacy Policy',
+                      style: TextStyle(color: AppColours.primaryPurple),
+                    ),
+                    TextSpan(text: '.'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
