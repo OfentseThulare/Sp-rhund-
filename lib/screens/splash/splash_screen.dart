@@ -66,10 +66,10 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         children: [
           // Atmospheric gradient orb behind wordmark
-          IgnorePointer(
-            child: Positioned(
-              top: MediaQuery.of(context).size.height * 0.3,
-              left: MediaQuery.of(context).size.width * 0.5 - 120,
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.3,
+            left: MediaQuery.of(context).size.width * 0.5 - 120,
+            child: IgnorePointer(
               child: Container(
                 width: 240,
                 height: 240,
