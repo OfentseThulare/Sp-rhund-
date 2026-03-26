@@ -1,11 +1,11 @@
 {
-    "name": "Spurhund",
-    "short_name": "Spurhund",
+    "name": "Spürhund",
+    "short_name": "Spürhund",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FFFFFF",
+    "background_color": "#0A0A0A",
     "theme_color": "#8529E2",
-    "description": "Municipal Accounts Management",
+    "description": "Never be surprised by a municipal bill again. Track water, electricity, rates, and waste from one dashboard.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
