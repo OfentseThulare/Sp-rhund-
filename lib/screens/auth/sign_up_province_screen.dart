@@ -4,6 +4,7 @@ import '../../theme/colours.dart';
 import '../../theme/typography.dart';
 import '../../widgets/common/spuerhund_button.dart';
 import '../../widgets/common/spuerhund_input.dart';
+import '../../widgets/common/shield_crest.dart';
 
 class SignUpProvinceScreen extends StatefulWidget {
   const SignUpProvinceScreen({super.key});
@@ -43,11 +44,7 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.shield_rounded,
-                size: 48,
-                color: Colors.white,
-              ),
+              const ShieldCrest(size: 64),
               const SizedBox(height: 24),
               Semantics(
                 header: true,
