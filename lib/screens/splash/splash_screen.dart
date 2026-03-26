@@ -63,41 +63,66 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) => Opacity(
-                opacity: _fadeAnimation.value,
-                child: Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: child,
-                ),
-              ),
-              child: const Text(
-                'SP\u00DCRHUND',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  color: AppColours.primaryPurple,
-                  letterSpacing: 6,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            FadeTransition(
-              opacity: _taglineFadeAnimation,
-              child: Text(
-                'Never be surprised by a municipal bill again.',
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColours.textSecondary,
+      body: Stack(
+        children: [
+          // Atmospheric gradient orb behind wordmark
+          IgnorePointer(
+            child: Positioned(
+              top: MediaQuery.of(context).size.height * 0.3,
+              left: MediaQuery.of(context).size.width * 0.5 - 120,
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColours.primaryPurple.withValues(alpha: 0.15),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          // Main content
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) => Opacity(
+                    opacity: _fadeAnimation.value,
+                    child: Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: child,
+                    ),
+                  ),
+                  child: const Text(
+                    'SP\u00DCRHUND',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      color: AppColours.primaryPurple,
+                      letterSpacing: 6,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                FadeTransition(
+                  opacity: _taglineFadeAnimation,
+                  child: Text(
+                    'Never be surprised by a municipal bill again.',
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColours.textSecondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -20,7 +20,7 @@ abstract final class AppColours {
 
   // Borders and Dividers
   static const Color divider = Color(0xFF2A2A2A);
-  static Color borderSubtle = Colors.white.withValues(alpha: 0.05);
+  static Color borderSubtle = Colors.white.withValues(alpha: 0.08);
   static Color borderLight = Colors.white.withValues(alpha: 0.10);
 
   // Status

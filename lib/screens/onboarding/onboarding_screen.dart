@@ -266,13 +266,13 @@ class _GeometricIllustration extends StatelessWidget {
         children: [
           // Purple gradient glow
           Container(
-            width: 120,
-            height: 120,
+            width: 160,
+            height: 160,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColours.primaryPurple.withValues(alpha: 0.2),
+                  color: AppColours.primaryPurple.withValues(alpha: 0.25),
                   blurRadius: 60,
                   spreadRadius: 20,
                 ),

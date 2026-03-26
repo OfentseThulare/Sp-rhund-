@@ -34,7 +34,51 @@ class _ServiceStatusScreenState extends State<ServiceStatusScreen> {
 
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
-      body: SafeArea(
+      body: Stack(
+        children: [
+          // Atmospheric gradient orbs
+          IgnorePointer(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -40,
+                  right: -60,
+                  child: Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          AppColours.primaryPurple.withValues(alpha: 0.12),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 200,
+                  left: -80,
+                  child: Container(
+                    width: 160,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          AppColours.deepViolet.withValues(alpha: 0.10),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Main content
+          SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
           child: Column(
@@ -259,6 +303,8 @@ class _ServiceStatusScreenState extends State<ServiceStatusScreen> {
             ],
           ),
         ),
+          ),
+        ],
       ),
     );
   }

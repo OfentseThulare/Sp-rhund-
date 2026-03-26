@@ -92,55 +92,84 @@ class _BalanceCardState extends State<BalanceCard>
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          clipBehavior: Clip.hardEdge,
+          child: Stack(
             children: [
-              Text(
-                'Total Amount Due',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColours.pureWhite.withValues(alpha: 0.7),
+              // Subtle inner glow at top-left
+              Positioned(
+                top: -20,
+                left: -20,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          Colors.white.withValues(alpha: 0.08),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                currencyFormat.format(widget.totalBalance),
-                style: AppTypography.balanceDisplay,
-              ),
-              if (widget.nextDueDate != null) ...[
-                const SizedBox(height: 12),
-                Row(
+              // Card content
+              Padding(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Next due: ${dateFormat.format(widget.nextDueDate!)}',
+                      'Total Amount Due',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         color: AppColours.pureWhite.withValues(alpha: 0.7),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColours.pureWhite.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        _daysUntilDue,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: AppColours.pureWhite,
-                        ),
-                      ),
+                    const SizedBox(height: 8),
+                    Text(
+                      currencyFormat.format(widget.totalBalance),
+                      style: AppTypography.balanceDisplay,
                     ),
+                    if (widget.nextDueDate != null) ...[
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Text(
+                            'Next due: ${dateFormat.format(widget.nextDueDate!)}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColours.pureWhite.withValues(alpha: 0.7),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColours.pureWhite.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              _daysUntilDue,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: AppColours.pureWhite,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
-              ],
+              ),
             ],
           ),
         );

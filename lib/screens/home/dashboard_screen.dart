@@ -26,68 +26,114 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
-      body: SafeArea(
-        child: RefreshIndicator(
-          color: AppColours.primaryPurple,
-          onRefresh: context.read<DashboardViewModel>().refresh,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
-            children: [
-              _buildTopBar(context),
-              const SizedBox(height: 8),
-              Text(
-                _greeting(),
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColours.textSecondary,
+      body: Stack(
+        children: [
+          // Atmospheric gradient orbs
+          IgnorePointer(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -60,
+                  right: -80,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          AppColours.primaryPurple.withValues(alpha: 0.15),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Selector<DashboardViewModel, ({double balance, DateTime? dueDate})>(
-                selector: (_, vm) => (balance: vm.totalBalance, dueDate: vm.nextDueDate),
-                builder: (_, data, __) => BalanceCard(
-                  totalBalance: data.balance,
-                  nextDueDate: data.dueDate,
+                Positioned(
+                  bottom: 120,
+                  left: -60,
+                  child: Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          AppColours.deepViolet.withValues(alpha: 0.12),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              const QuickActionsRow(),
-              const SizedBox(height: 24),
-              SectionHeader(
-                title: 'Your Accounts',
-                actionLabel: 'See all',
-                onAction: () => context.push('/home/history'),
-              ),
-              const SizedBox(height: 8),
-              Selector<DashboardViewModel, List<AccountService>>(
-                selector: (_, vm) => vm.allServices,
-                builder: (_, services, __) => Column(
-                  children: services.map((s) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: AccountTile(service: s),
-                  )).toList(),
-                ),
-              ),
-              Selector<DashboardViewModel, List<ServiceAlert>>(
-                selector: (_, vm) => vm.recentAlerts,
-                builder: (_, alerts, __) {
-                  if (alerts.isEmpty) return const SizedBox.shrink();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      const SectionHeader(title: 'Alerts'),
-                      const SizedBox(height: 8),
-                      ...alerts.map((a) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: StatusCard(alert: a),
-                      )),
-                    ],
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          // Main content
+          SafeArea(
+            child: RefreshIndicator(
+              color: AppColours.primaryPurple,
+              onRefresh: context.read<DashboardViewModel>().refresh,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
+                children: [
+                  _buildTopBar(context),
+                  const SizedBox(height: 8),
+                  Text(
+                    _greeting(),
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColours.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Selector<DashboardViewModel, ({double balance, DateTime? dueDate})>(
+                    selector: (_, vm) => (balance: vm.totalBalance, dueDate: vm.nextDueDate),
+                    builder: (_, data, __) => BalanceCard(
+                      totalBalance: data.balance,
+                      nextDueDate: data.dueDate,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const QuickActionsRow(),
+                  const SizedBox(height: 24),
+                  SectionHeader(
+                    title: 'Your Accounts',
+                    actionLabel: 'See all',
+                    onAction: () => context.push('/home/history'),
+                  ),
+                  const SizedBox(height: 8),
+                  Selector<DashboardViewModel, List<AccountService>>(
+                    selector: (_, vm) => vm.allServices,
+                    builder: (_, services, __) => Column(
+                      children: services.map((s) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: AccountTile(service: s),
+                      )).toList(),
+                    ),
+                  ),
+                  Selector<DashboardViewModel, List<ServiceAlert>>(
+                    selector: (_, vm) => vm.recentAlerts,
+                    builder: (_, alerts, __) {
+                      if (alerts.isEmpty) return const SizedBox.shrink();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
+                          const SectionHeader(title: 'Alerts'),
+                          const SizedBox(height: 8),
+                          ...alerts.map((a) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: StatusCard(alert: a),
+                          )),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
