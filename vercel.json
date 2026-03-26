@@ -1,6 +1,6 @@
 {
   "buildCommand": "echo 'Pre-built Flutter web output'",
-  "outputDirectory": "spurhund_app/build/web",
+  "outputDirectory": "build/web",
   "installCommand": "echo 'No install needed'",
   "rewrites": [
     {
