@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../../data/mock/mock_bills.dart';
+import '../../models/bill.dart';
 import '../../theme/colours.dart';
 import '../../theme/typography.dart';
 import '../../widgets/common/status_badge.dart';
@@ -10,8 +13,77 @@ class BillDetailScreen extends StatelessWidget {
 
   const BillDetailScreen({super.key, required this.billId});
 
+  Bill? get _bill {
+    try {
+      return mockBills.firstWhere((b) => b.id == billId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  IconData _iconForService(ServiceType type) {
+    switch (type) {
+      case ServiceType.water:
+        return Icons.water_drop_rounded;
+      case ServiceType.electricity:
+        return Icons.flash_on_rounded;
+      case ServiceType.ratesAndTaxes:
+        return Icons.account_balance_rounded;
+      case ServiceType.waste:
+        return Icons.delete_outline_rounded;
+    }
+  }
+
+  Color _colourForService(ServiceType type) {
+    switch (type) {
+      case ServiceType.water:
+        return AppColours.info;
+      case ServiceType.electricity:
+        return AppColours.amber;
+      case ServiceType.ratesAndTaxes:
+        return AppColours.primaryPurple;
+      case ServiceType.waste:
+        return AppColours.emerald;
+    }
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '—';
+    return DateFormat('d MMM yyyy').format(date);
+  }
+
+  String _formatAmount(double amount) {
+    return 'R ${amount.toStringAsFixed(2)}';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bill = _bill;
+
+    if (bill == null) {
+      return Scaffold(
+        backgroundColor: AppColours.voidBlack,
+        appBar: AppBar(
+          backgroundColor: AppColours.voidBlack,
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColours.textPrimary),
+            onPressed: () => context.pop(),
+          ),
+        ),
+        body: Center(
+          child: Text(
+            'Bill not found',
+            style: AppTypography.bodyMedium.copyWith(color: AppColours.textSecondary),
+          ),
+        ),
+      );
+    }
+
+    final icon = _iconForService(bill.serviceType);
+    final colour = _colourForService(bill.serviceType);
+    final details = bill.details;
+
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
@@ -38,13 +110,53 @@ class BillDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            _buildServiceHeader(),
+            // Service header
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: colour.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(icon, color: colour, size: 24),
+                ),
+                const SizedBox(width: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bill.serviceType.label,
+                      style: AppTypography.headlineMedium,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${bill.serviceType.accountPrefix}-${bill.period.replaceAll(' ', '-')}',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColours.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
-            _buildInfoRow(),
+            // Info row
+            Row(
+              children: [
+                Expanded(child: _infoColumn('Bill Period', bill.period)),
+                Expanded(child: _infoColumn('Issue Date', _formatDate(bill.issuedDate))),
+                Expanded(child: _infoColumn('Due Date', _formatDate(bill.dueDate))),
+              ],
+            ),
             const SizedBox(height: 24),
-            _buildBreakdownCard(),
+            // Breakdown card
+            if (details != null) _buildBreakdownCard(details, bill.totalAmount),
+            if (details == null) _buildSimpleTotal(bill.totalAmount),
             const SizedBox(height: 24),
-            _buildPaymentStatus(),
+            // Payment status
+            bill.status == BillStatus.paid ? StatusBadge.paid() : StatusBadge.unpaid(),
             const SizedBox(height: 24),
             SpuerhundButton(
               label: 'Download Statement',
@@ -86,59 +198,6 @@ class BillDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceHeader() {
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: AppColours.info.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: const Icon(
-            Icons.water_drop_rounded,
-            color: AppColours.info,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 14),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Water',
-              style: AppTypography.headlineMedium,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'ACC-TSH-2026-0847',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColours.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: _infoColumn('Bill Period', '1\u201331 Mar 2026'),
-        ),
-        Expanded(
-          child: _infoColumn('Issue Date', '1 Mar 2026'),
-        ),
-        Expanded(
-          child: _infoColumn('Due Date', '15 Apr 2026'),
-        ),
-      ],
-    );
-  }
-
   Widget _infoColumn(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,14 +219,7 @@ class BillDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBreakdownCard() {
-    const lineItems = [
-      ('Basic charge', 'R 125.00'),
-      ('Usage (14kL)', 'R 267.78'),
-      ('Sanitation levy', 'R 34.00'),
-      ('VAT (15%)', 'R 30.00'),
-    ];
-
+  Widget _buildBreakdownCard(BillDetails details, double total) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -178,25 +230,24 @@ class BillDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Breakdown',
-            style: AppTypography.amountMedium,
-          ),
+          Text('Breakdown', style: AppTypography.amountMedium),
           const SizedBox(height: 12),
-          ...lineItems.map(
+          ...details.lineItems.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    item.$1,
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: AppColours.textSecondary,
+                  Expanded(
+                    child: Text(
+                      item.description,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColours.textSecondary,
+                      ),
                     ),
                   ),
                   Text(
-                    item.$2,
+                    _formatAmount(item.amountInclVat),
                     style: AppTypography.bodyMedium,
                   ),
                 ],
@@ -210,15 +261,11 @@ class BillDetailScreen extends StatelessWidget {
             children: [
               Text(
                 'Total',
-                style: AppTypography.amountMedium.copyWith(
-                  fontSize: 15,
-                ),
+                style: AppTypography.amountMedium.copyWith(fontSize: 15),
               ),
               Text(
-                'R 456.78',
-                style: AppTypography.amountMedium.copyWith(
-                  fontSize: 15,
-                ),
+                _formatAmount(total),
+                style: AppTypography.amountMedium.copyWith(fontSize: 15),
               ),
             ],
           ),
@@ -227,7 +274,21 @@ class BillDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentStatus() {
-    return StatusBadge.unpaid();
+  Widget _buildSimpleTotal(double total) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColours.surface,
+        border: Border.all(color: AppColours.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Total', style: AppTypography.amountMedium),
+          Text(_formatAmount(total), style: AppTypography.amountMedium),
+        ],
+      ),
+    );
   }
 }

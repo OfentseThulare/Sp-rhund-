@@ -1,9 +1,43 @@
+enum ServiceType {
+  water,
+  electricity,
+  ratesAndTaxes,
+  waste;
+
+  String get label {
+    switch (this) {
+      case ServiceType.water:
+        return 'Water';
+      case ServiceType.electricity:
+        return 'Electricity';
+      case ServiceType.ratesAndTaxes:
+        return 'Rates & Taxes';
+      case ServiceType.waste:
+        return 'Waste';
+    }
+  }
+
+  String get accountPrefix {
+    switch (this) {
+      case ServiceType.water:
+        return 'ACC-TSH-WTR';
+      case ServiceType.electricity:
+        return 'ACC-TSH-ELC';
+      case ServiceType.ratesAndTaxes:
+        return 'ACC-TSH-RAT';
+      case ServiceType.waste:
+        return 'ACC-TSH-WST';
+    }
+  }
+}
+
 class Bill {
   final String id;
   final String accountId;
   final String period;
   final double totalAmount;
   final BillStatus status;
+  final ServiceType serviceType;
   final DateTime? issuedDate;
   final DateTime? dueDate;
   final BillDetails? details;
@@ -15,6 +49,7 @@ class Bill {
     required this.period,
     required this.totalAmount,
     required this.status,
+    required this.serviceType,
     this.issuedDate,
     this.dueDate,
     this.details,

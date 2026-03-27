@@ -1,26 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../data/mock/mock_bills.dart';
+import '../../models/bill.dart';
 import '../../theme/colours.dart';
 import '../../theme/typography.dart';
 import '../../widgets/common/status_badge.dart';
-
-class _BillItem {
-  final IconData icon;
-  final Color color;
-  final String service;
-  final String period;
-  final String amount;
-  final bool isPaid;
-
-  const _BillItem({
-    required this.icon,
-    required this.color,
-    required this.service,
-    required this.period,
-    required this.amount,
-    required this.isPaid,
-  });
-}
 
 class BillHistoryScreen extends StatefulWidget {
   const BillHistoryScreen({super.key});
@@ -41,59 +25,41 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
 
   int _selectedMonth = 0;
 
-  static final _bills = [
-    _BillItem(
-      icon: Icons.water_drop_rounded,
-      color: AppColours.info,
-      service: 'Water',
-      period: 'Mar 2026',
-      amount: 'R 456.78',
-      isPaid: false,
-    ),
-    _BillItem(
-      icon: Icons.flash_on_rounded,
-      color: AppColours.amber,
-      service: 'Electricity',
-      period: 'Mar 2026',
-      amount: 'R 892.45',
-      isPaid: false,
-    ),
-    _BillItem(
-      icon: Icons.account_balance_rounded,
-      color: AppColours.primaryPurple,
-      service: 'Rates & Taxes',
-      period: 'Mar 2026',
-      amount: 'R 1,247.00',
-      isPaid: true,
-    ),
-    _BillItem(
-      icon: Icons.delete_outline_rounded,
-      color: AppColours.emerald,
-      service: 'Waste',
-      period: 'Mar 2026',
-      amount: 'R 251.40',
-      isPaid: false,
-    ),
-    _BillItem(
-      icon: Icons.water_drop_rounded,
-      color: AppColours.info,
-      service: 'Water',
-      period: 'Feb 2026',
-      amount: 'R 423.12',
-      isPaid: true,
-    ),
-    _BillItem(
-      icon: Icons.flash_on_rounded,
-      color: AppColours.amber,
-      service: 'Electricity',
-      period: 'Feb 2026',
-      amount: 'R 834.90',
-      isPaid: true,
-    ),
-  ];
+  List<Bill> get _filteredBills {
+    final month = _months[_selectedMonth];
+    return mockBills.where((b) => b.period == month).toList();
+  }
+
+  IconData _iconForService(ServiceType type) {
+    switch (type) {
+      case ServiceType.water:
+        return Icons.water_drop_rounded;
+      case ServiceType.electricity:
+        return Icons.flash_on_rounded;
+      case ServiceType.ratesAndTaxes:
+        return Icons.account_balance_rounded;
+      case ServiceType.waste:
+        return Icons.delete_outline_rounded;
+    }
+  }
+
+  Color _colourForService(ServiceType type) {
+    switch (type) {
+      case ServiceType.water:
+        return AppColours.info;
+      case ServiceType.electricity:
+        return AppColours.amber;
+      case ServiceType.ratesAndTaxes:
+        return AppColours.primaryPurple;
+      case ServiceType.waste:
+        return AppColours.emerald;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bills = _filteredBills;
+
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
       appBar: AppBar(
@@ -116,6 +82,7 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
       ),
       body: Column(
         children: [
+          // Month filter tabs
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -128,48 +95,61 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
                 return Semantics(
                   button: true,
                   label: 'Filter by ${_months[index]}',
+                  selected: isSelected,
                   child: GestureDetector(
-                  onTap: () => setState(() => _selectedMonth = index),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColours.primaryPurple
-                          : AppColours.surface,
-                      border: isSelected
-                          ? null
-                          : Border.all(color: AppColours.borderLight),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      _months[index],
-                      style: AppTypography.labelLarge.copyWith(
+                    onTap: () => setState(() => _selectedMonth = index),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColours.pureWhite
-                            : AppColours.textSecondary,
+                            ? AppColours.primaryPurple
+                            : AppColours.surface,
+                        border: isSelected
+                            ? null
+                            : Border.all(color: AppColours.borderLight),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        _months[index],
+                        style: AppTypography.labelLarge.copyWith(
+                          color: isSelected
+                              ? AppColours.pureWhite
+                              : AppColours.textSecondary,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 );
               },
             ),
           ),
           const SizedBox(height: 16),
+          // Bill list for selected month
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _bills.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final bill = _bills[index];
-                return _BillCard(
-                  bill: bill,
-                  onTap: () => context.push('/home/bill/$index'),
-                );
-              },
-            ),
+            child: bills.isEmpty
+                ? Center(
+                    child: Text(
+                      'No bills for this period',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColours.textSecondary,
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: bills.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final bill = bills[index];
+                      return _BillCard(
+                        bill: bill,
+                        icon: _iconForService(bill.serviceType),
+                        colour: _colourForService(bill.serviceType),
+                        onTap: () => context.push('/home/bill/${bill.id}'),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -178,74 +158,73 @@ class _BillHistoryScreenState extends State<BillHistoryScreen> {
 }
 
 class _BillCard extends StatelessWidget {
-  final _BillItem bill;
+  final Bill bill;
+  final IconData icon;
+  final Color colour;
   final VoidCallback onTap;
 
-  const _BillCard({required this.bill, required this.onTap});
+  const _BillCard({
+    required this.bill,
+    required this.icon,
+    required this.colour,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'View bill details for ${bill.service}',
+      label: 'View ${bill.serviceType.label} bill for ${bill.period}, R ${bill.totalAmount.toStringAsFixed(2)}',
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColours.surface,
-          border: Border.all(color: AppColours.borderSubtle),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: bill.color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
+          decoration: BoxDecoration(
+            color: AppColours.surface,
+            border: Border.all(color: AppColours.borderSubtle),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: colour.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: colour, size: 20),
               ),
-              child: Icon(
-                bill.icon,
-                color: bill.color,
-                size: 20,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bill.serviceType.label,
+                      style: AppTypography.amountMedium.copyWith(fontSize: 15),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      bill.period,
+                      style: AppTypography.bodySmall.copyWith(fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    bill.service,
-                    style: AppTypography.amountMedium.copyWith(
-                      fontSize: 15,
-                    ),
+                    'R ${bill.totalAmount.toStringAsFixed(2)}',
+                    style: AppTypography.amountMedium.copyWith(fontSize: 15),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    bill.period,
-                    style: AppTypography.bodySmall.copyWith(
-                      fontSize: 13,
-                    ),
-                  ),
+                  const SizedBox(height: 4),
+                  bill.status == BillStatus.paid
+                      ? StatusBadge.paid()
+                      : StatusBadge.unpaid(),
                 ],
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  bill.amount,
-                  style: AppTypography.amountMedium.copyWith(
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                bill.isPaid ? StatusBadge.paid() : StatusBadge.unpaid(),
-              ],
-            ),
             ],
           ),
         ),
