@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../theme/colours.dart';
 import '../../theme/typography.dart';
+import '../../view_models/auth_view_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authVm = context.watch<AuthViewModel>();
+    final user = authVm.user;
+    final displayName = user?.fullName ?? 'User';
+    final initials = user?.initials ?? '?';
+    final email = user?.email ?? '';
+    final phone = user?.phone ?? '';
+
     return Scaffold(
       backgroundColor: AppColours.voidBlack,
       body: SafeArea(
@@ -37,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    'LM',
+                    initials,
                     style: AppTypography.headlineLarge.copyWith(
                       color: AppColours.primaryPurple,
                     ),
@@ -47,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Center(
                 child: Text(
-                  'Lionel Maharaj',
+                  displayName,
                   style: AppTypography.headlineSmall.copyWith(
                     fontSize: 20,
                   ),
@@ -56,21 +65,23 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 4),
               Center(
                 child: Text(
-                  'lionel.maharaj@email.com',
+                  email,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColours.textSecondary,
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
-              Center(
-                child: Text(
-                  '+27 82 456 7890',
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColours.textSecondary,
+              if (phone.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Center(
+                  child: Text(
+                    phone,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColours.textSecondary,
+                    ),
                   ),
                 ),
-              ),
+              ],
               const SizedBox(height: 32),
 
               // Linked Account
@@ -167,13 +178,18 @@ class ProfileScreen extends StatelessWidget {
                 semanticLabel: 'Sign out',
                 titleColour: AppColours.crimson,
                 trailing: const SizedBox.shrink(),
-                onTap: () => context.go('/onboarding'),
+                onTap: () async {
+                  await context.read<AuthViewModel>().signOut();
+                  if (context.mounted) {
+                    context.go('/onboarding');
+                  }
+                },
               ),
 
               const SizedBox(height: 32),
               Center(
                 child: Text(
-                  'Sp\u00FCrhund Pitch Tool v1.0',
+                  'Sp\u00FCrhund v1.0',
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColours.textTertiary,
                   ),

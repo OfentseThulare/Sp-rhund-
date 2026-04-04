@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../services/supabase_service.dart';
 import '../../theme/colours.dart';
 import '../../theme/typography.dart';
 
@@ -49,7 +50,13 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) context.go('/onboarding');
+      if (!mounted) return;
+
+      if (SupabaseService.isAuthenticated) {
+        context.go('/home');
+      } else {
+        context.go('/onboarding');
+      }
     });
   }
 
@@ -65,7 +72,6 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: AppColours.voidBlack,
       body: Stack(
         children: [
-          // Atmospheric gradient orb behind wordmark
           Positioned(
             top: MediaQuery.of(context).size.height * 0.3,
             left: MediaQuery.of(context).size.width * 0.5 - 120,
@@ -85,7 +91,6 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           ),
-          // Main content
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -8,19 +8,17 @@ import '../../widgets/common/spuerhund_button.dart';
 import '../../widgets/common/spuerhund_input.dart';
 import '../../widgets/common/shield_crest.dart';
 
-class SignUpProvinceScreen extends StatefulWidget {
-  const SignUpProvinceScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUpProvinceScreen> createState() => _SignUpProvinceScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
 
@@ -28,33 +26,29 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _nameController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignUp() async {
+  Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     final authVm = context.read<AuthViewModel>();
-    final success = await authVm.signUpWithSupabase(
+    final success = await authVm.signInWithSupabase(
       email: _emailController.text.trim(),
       password: _passwordController.text,
-      fullName: _nameController.text.trim(),
-      phone: _phoneController.text.trim(),
     );
 
     if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (success) {
-      context.go('/link-account');
+      context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authVm.errorMessage ?? 'Sign up failed'),
+          content: Text(authVm.errorMessage ?? 'Login failed'),
           backgroundColor: Colors.red.shade700,
         ),
       );
@@ -84,16 +78,14 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
               Semantics(
                 header: true,
                 child: Text(
-                  'Get Started with Sp\u00FCrhund',
+                  'Welcome Back',
                   textAlign: TextAlign.center,
-                  style: AppTypography.headlineLarge.copyWith(
-                    fontSize: 26,
-                  ),
+                  style: AppTypography.headlineLarge.copyWith(fontSize: 26),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Create your account in seconds.',
+                'Sign in to your account.',
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyLarge.copyWith(
                   color: AppColours.textSecondary,
@@ -104,19 +96,6 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    SpuerhundInput(
-                      label: 'Full Name',
-                      hint: 'Enter your full name',
-                      controller: _nameController,
-                      keyboardType: TextInputType.name,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
                     SpuerhundInput(
                       label: 'Email',
                       hint: 'Enter email',
@@ -134,23 +113,13 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                     ),
                     const SizedBox(height: 16),
                     SpuerhundInput(
-                      label: 'Phone (optional)',
-                      hint: '+27 XX XXX XXXX',
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    const SizedBox(height: 16),
-                    SpuerhundInput(
                       label: 'Password',
-                      hint: 'Password (min 6 characters)',
+                      hint: 'Password',
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
+                          return 'Please enter your password';
                         }
                         return null;
                       },
@@ -168,28 +137,52 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              SpuerhundButton(
-                label: 'Sign Up',
-                isLoading: _isLoading,
-                onPressed: _isLoading ? null : _handleSignUp,
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  button: true,
+                  label: 'Forgot password',
+                  child: GestureDetector(
+                    onTap: () => context.go('/forgot-password'),
+                    child: SizedBox(
+                      height: 44,
+                      child: Center(
+                        widthFactor: 1,
+                        child: Text(
+                          'Forgot password?',
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColours.primaryPurple,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
+              SpuerhundButton(
+                label: 'Log In',
+                isLoading: _isLoading,
+                onPressed: _isLoading ? null : _handleLogin,
+              ),
+              const SizedBox(height: 24),
               Center(
                 child: Semantics(
                   button: true,
-                  label: 'Log in to existing account',
+                  label: 'Create a new account',
                   child: GestureDetector(
-                    onTap: () => context.go('/login'),
+                    onTap: () => context.go('/signup'),
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an account? ',
+                        text: "Don't have an account? ",
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColours.textSecondary,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Log In',
+                            text: 'Sign Up',
                             style: TextStyle(
                               color: AppColours.primaryPurple,
                               fontWeight: FontWeight.w600,
@@ -199,28 +192,6 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                       ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  text: 'By creating an account, you agree to our ',
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColours.textTertiary,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Terms & Conditions',
-                      style: TextStyle(color: AppColours.primaryPurple),
-                    ),
-                    const TextSpan(text: ' and '),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: TextStyle(color: AppColours.primaryPurple),
-                    ),
-                    const TextSpan(text: '.'),
-                  ],
                 ),
               ),
               const SizedBox(height: 32),

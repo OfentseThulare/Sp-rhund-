@@ -142,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 button: true,
                 label: 'Sign in to existing account',
                 child: GestureDetector(
-                  onTap: () => context.go('/signup'),
+                  onTap: () => context.go('/login'),
                   child: SizedBox(
                     height: 44,
                     child: Center(
