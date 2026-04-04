@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../services/supabase_service.dart';
 import '../../theme/colours.dart';
 import '../../theme/typography.dart';
 
@@ -50,13 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-
-      if (SupabaseService.isAuthenticated) {
-        context.go('/home');
-      } else {
-        context.go('/onboarding');
-      }
+      if (mounted) context.go('/onboarding');
     });
   }
 

@@ -20,79 +20,26 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignUp() async {
+  void _handleSignUp() {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
-
-    final authVm = context.read<AuthViewModel>();
-    final success = await authVm.signUpWithSupabase(
+    context.read<AuthViewModel>().signIn(
       email: _emailController.text.trim(),
-      password: _passwordController.text,
-      fullName: _nameController.text.trim(),
-      phone: _phoneController.text.trim(),
+      name: _nameController.text.trim().isEmpty
+          ? null
+          : _nameController.text.trim(),
     );
-
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (success) {
-      if (authVm.needsEmailConfirmation) {
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (ctx) => AlertDialog(
-              backgroundColor: AppColours.surface,
-              title: Text(
-                'Check Your Email',
-                style: AppTypography.headlineSmall,
-              ),
-              content: Text(
-                'We have sent a confirmation link to ${_emailController.text.trim()}. Please confirm your email, then log in.',
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColours.textSecondary,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    context.go('/login');
-                  },
-                  child: Text(
-                    'Go to Log In',
-                    style: TextStyle(color: AppColours.primaryPurple),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      } else {
-        context.go('/link-account');
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authVm.errorMessage ?? 'Sign up failed'),
-          backgroundColor: Colors.red.shade700,
-        ),
-      );
-    }
+    context.go('/link-account');
   }
 
   @override
@@ -120,9 +67,7 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                 child: Text(
                   'Get Started with Sp\u00FCrhund',
                   textAlign: TextAlign.center,
-                  style: AppTypography.headlineLarge.copyWith(
-                    fontSize: 26,
-                  ),
+                  style: AppTypography.headlineLarge.copyWith(fontSize: 26),
                 ),
               ),
               const SizedBox(height: 8),
@@ -143,12 +88,6 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                       hint: 'Enter your full name',
                       controller: _nameController,
                       keyboardType: TextInputType.name,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 16),
                     SpuerhundInput(
@@ -160,31 +99,18 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!value.contains('@') || !value.contains('.')) {
-                          return 'Please enter a valid email address';
-                        }
                         return null;
                       },
                     ),
                     const SizedBox(height: 16),
                     SpuerhundInput(
-                      label: 'Phone (optional)',
-                      hint: '+27 XX XXX XXXX',
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    const SizedBox(height: 16),
-                    SpuerhundInput(
                       label: 'Password',
-                      hint: 'Password (min 6 characters)',
+                      hint: 'Password',
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -205,8 +131,7 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
               const SizedBox(height: 24),
               SpuerhundButton(
                 label: 'Sign Up',
-                isLoading: _isLoading,
-                onPressed: _isLoading ? null : _handleSignUp,
+                onPressed: _handleSignUp,
               ),
               const SizedBox(height: 16),
               Center(

@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -29,30 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  void _handleLogin() {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
-
-    final authVm = context.read<AuthViewModel>();
-    final success = await authVm.signInWithSupabase(
+    context.read<AuthViewModel>().signIn(
       email: _emailController.text.trim(),
-      password: _passwordController.text,
     );
-
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (success) {
-      context.go('/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authVm.errorMessage ?? 'Login failed'),
-          backgroundColor: Colors.red.shade700,
-        ),
-      );
-    }
+    context.go('/home');
   }
 
   @override
@@ -105,9 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!value.contains('@') || !value.contains('.')) {
-                          return 'Please enter a valid email address';
-                        }
                         return null;
                       },
                     ),
@@ -137,35 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Semantics(
-                  button: true,
-                  label: 'Forgot password',
-                  child: GestureDetector(
-                    onTap: () => context.go('/forgot-password'),
-                    child: SizedBox(
-                      height: 44,
-                      child: Center(
-                        widthFactor: 1,
-                        child: Text(
-                          'Forgot password?',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColours.primaryPurple,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               SpuerhundButton(
                 label: 'Log In',
-                isLoading: _isLoading,
-                onPressed: _isLoading ? null : _handleLogin,
+                onPressed: _handleLogin,
               ),
               const SizedBox(height: 24),
               Center(

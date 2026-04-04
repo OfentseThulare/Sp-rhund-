@@ -178,11 +178,9 @@ class ProfileScreen extends StatelessWidget {
                 semanticLabel: 'Sign out',
                 titleColour: AppColours.crimson,
                 trailing: const SizedBox.shrink(),
-                onTap: () async {
-                  await context.read<AuthViewModel>().signOut();
-                  if (context.mounted) {
-                    context.go('/onboarding');
-                  }
+                onTap: () {
+                  context.read<AuthViewModel>().signOut();
+                  context.go('/onboarding');
                 },
               ),
 
