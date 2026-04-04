@@ -5,8 +5,14 @@ class AuthResult {
   final bool success;
   final String? errorMessage;
   final User? user;
+  final bool needsEmailConfirmation;
 
-  const AuthResult({required this.success, this.errorMessage, this.user});
+  const AuthResult({
+    required this.success,
+    this.errorMessage,
+    this.user,
+    this.needsEmailConfirmation = false,
+  });
 }
 
 class AuthService {
@@ -38,18 +44,15 @@ class AuthService {
         );
       }
 
-      // Create profile in spurhund schema
-      await _client.schema('spurhund').from('profiles').upsert({
-        'id': response.user!.id,
-        'full_name': fullName,
-        'email': email,
-        'phone': phone,
-        'province': province,
-        'municipality': municipality,
-        'property_type': propertyType,
-      });
+      // Profile is created automatically by database trigger.
+      // If email confirmation is required, session will be null.
+      final needsConfirmation = response.session == null;
 
-      return AuthResult(success: true, user: response.user);
+      return AuthResult(
+        success: true,
+        user: response.user,
+        needsEmailConfirmation: needsConfirmation,
+      );
     } on AuthException catch (e) {
       return AuthResult(success: false, errorMessage: e.message);
     } catch (e) {

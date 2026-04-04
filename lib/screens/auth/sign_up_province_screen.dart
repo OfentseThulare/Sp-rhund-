@@ -50,7 +50,41 @@ class _SignUpProvinceScreenState extends State<SignUpProvinceScreen> {
     setState(() => _isLoading = false);
 
     if (success) {
-      context.go('/link-account');
+      if (authVm.needsEmailConfirmation) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (ctx) => AlertDialog(
+              backgroundColor: AppColours.surface,
+              title: Text(
+                'Check Your Email',
+                style: AppTypography.headlineSmall,
+              ),
+              content: Text(
+                'We have sent a confirmation link to ${_emailController.text.trim()}. Please confirm your email, then log in.',
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColours.textSecondary,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    context.go('/login');
+                  },
+                  child: Text(
+                    'Go to Log In',
+                    style: TextStyle(color: AppColours.primaryPurple),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
+        context.go('/link-account');
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

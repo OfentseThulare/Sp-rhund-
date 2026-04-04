@@ -11,6 +11,7 @@ class AuthViewModel extends ChangeNotifier {
   String? _selectedProvince;
   String? _selectedMunicipality;
   bool _isAuthenticated = false;
+  bool _needsEmailConfirmation = false;
   String? _errorMessage;
   StreamSubscription? _authSubscription;
 
@@ -25,6 +26,7 @@ class AuthViewModel extends ChangeNotifier {
   String? get selectedMunicipality => _selectedMunicipality;
   String? get errorMessage => _errorMessage;
   bool get hasError => _errorMessage != null;
+  bool get needsEmailConfirmation => _needsEmailConfirmation;
 
   List<Province> get provinces => saProvinces;
 
@@ -111,6 +113,7 @@ class AuthViewModel extends ChangeNotifier {
     String? phone,
   }) async {
     _errorMessage = null;
+    _needsEmailConfirmation = false;
     notifyListeners();
 
     final result = await AuthService.signUp(
@@ -123,9 +126,12 @@ class AuthViewModel extends ChangeNotifier {
     );
 
     if (result.success) {
-      _isAuthenticated = true;
-      if (result.user != null) {
-        await _loadProfile(result.user!.id);
+      _needsEmailConfirmation = result.needsEmailConfirmation;
+      if (!result.needsEmailConfirmation) {
+        _isAuthenticated = true;
+        if (result.user != null) {
+          await _loadProfile(result.user!.id);
+        }
       }
       notifyListeners();
       return true;
